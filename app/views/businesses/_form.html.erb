@@ -1,0 +1,272 @@
+<div class="container-cpm max-w-4xl mx-auto px-4 py-8">
+  <div class="bg-cpm-white rounded-lg shadow-lg p-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-cpm-black mb-2">
+        <%= @business.persisted? ? "Edit Business Profile" : "Create Your Business Profile" %>
+      </h1>
+      <p class="text-cpm-gray-600">
+        <%= @business.persisted? ? "Update your business information" : "Tell us about your business and add a primary contact person" %>
+      </p>
+    </div>
+
+    <%= form_with model: @business, url: business_path, method: @business.persisted? ? :patch : :post, class: "space-y-8", local: true do |f| %>
+      <!-- Business Information Section -->
+      <div class="border-b border-gray-200 pb-8">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+          <svg class="w-5 h-5 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+          Business Information
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="md:col-span-2">
+            <label for="business_name" class="block mb-2 text-sm font-medium text-gray-900">
+              Business Name <span class="text-red-600">*</span>
+            </label>
+            <%= f.text_field :name, 
+                id: "business_name",
+                class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 #{'border-red-500' if @business.errors[:name].any?}",
+                placeholder: "Enter your business name",
+                required: true %>
+            <% if @business.errors[:name].any? %>
+              <p class="mt-1 text-sm text-red-600"><%= @business.errors[:name].first %></p>
+            <% end %>
+          </div>
+
+          <div class="md:col-span-2">
+            <label for="business_description" class="block mb-2 text-sm font-medium text-gray-900">
+              Business Description
+            </label>
+            <%= f.text_area :description, 
+                id: "business_description",
+                rows: 4,
+                class: "block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-red-500 focus:border-red-500 #{'border-red-500' if @business.errors[:description].any?}",
+                placeholder: "Describe your business, services, and what makes you unique (minimum 10 characters if provided)" %>
+            <% if @business.errors[:description].any? %>
+              <p class="mt-1 text-sm text-red-600"><%= @business.errors[:description].first %></p>
+            <% end %>
+          </div>
+
+          <div>
+            <label for="business_email" class="block mb-2 text-sm font-medium text-gray-900">
+              Business Email <span class="text-red-600">*</span>
+            </label>
+            <%= f.email_field :email, 
+                id: "business_email",
+                class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 #{'border-red-500' if @business.errors[:email].any?}",
+                placeholder: "contact@yourbusiness.com",
+                required: true %>
+            <% if @business.errors[:email].any? %>
+              <p class="mt-1 text-sm text-red-600"><%= @business.errors[:email].first %></p>
+            <% end %>
+          </div>
+
+          <div>
+            <label for="business_phone" class="block mb-2 text-sm font-medium text-gray-900">
+              Business Phone <span class="text-red-600">*</span>
+            </label>
+            <%= f.text_field :phone, 
+                id: "business_phone",
+                class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 #{'border-red-500' if @business.errors[:phone].any?}",
+                placeholder: "(555) 123-4567",
+                required: true %>
+            <% if @business.errors[:phone].any? %>
+              <p class="mt-1 text-sm text-red-600"><%= @business.errors[:phone].first %></p>
+            <% end %>
+          </div>
+
+          <div>
+            <label for="business_website" class="block mb-2 text-sm font-medium text-gray-900">Website</label>
+            <%= f.url_field :website, 
+                id: "business_website",
+                class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 #{'border-red-500' if @business.errors[:website].any?}",
+                placeholder: "https://www.yourbusiness.com" %>
+            <% if @business.errors[:website].any? %>
+              <p class="mt-1 text-sm text-red-600"><%= @business.errors[:website].first %></p>
+            <% end %>
+          </div>
+
+          <div>
+            <label for="business_logo" class="block mb-2 text-sm font-medium text-gray-900">Logo</label>
+            <%= f.file_field :logo, 
+                id: "business_logo",
+                class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-red-50 file:text-red-700 hover:file:bg-red-100" %>
+            <% if @business.logo.attached? %>
+              <div class="mt-3">
+                <%= image_tag @business.logo.variant(resize_to_limit: [200, 200]), class: "rounded-lg border border-gray-200" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Address Section -->
+      <div class="border-b border-gray-200 pb-8">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+          <svg class="w-5 h-5 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+          Business Address
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="md:col-span-2">
+            <label for="business_address_1" class="block mb-2 text-sm font-medium text-gray-900">
+              Address One <span class="text-red-600">*</span>
+            </label>
+            <%= f.text_field :address_1, 
+                id: "business_address_1",
+                class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 #{'border-red-500' if @business.errors[:address_1].any?}",
+                placeholder: "123 Main Street",
+                required: true %>
+            <% if @business.errors[:address_1].any? %>
+              <p class="mt-1 text-sm text-cpm-red-600"><%= @business.errors[:address_1].first %></p>
+            <% end %>
+          </div>
+
+          <div>
+            <label for="business_address_2" class="block mb-2 text-sm font-medium text-gray-900">Address Two</label>
+            <%= f.text_field :address_2, 
+                id: "business_address_2",
+                class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5",
+                placeholder: "Suite 100" %>
+          </div>
+
+          <div>
+            <label for="business_city" class="block mb-2 text-sm font-medium text-gray-900">
+              City <span class="text-red-600">*</span>
+            </label>
+            <%= f.text_field :city, 
+                id: "business_city",
+                class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 #{'border-red-500' if @business.errors[:city].any?}",
+                placeholder: "Chicago",
+                required: true %>
+            <% if @business.errors[:city].any? %>
+              <p class="mt-1 text-sm text-cpm-red-600"><%= @business.errors[:city].first %></p>
+            <% end %>
+          </div>
+
+          <div>
+            <label for="business_state" class="block mb-2 text-sm font-medium text-gray-900">
+              State <span class="text-red-600">*</span>
+            </label>
+            <%= f.text_field :state, 
+                id: "business_state",
+                class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 #{'border-red-500' if @business.errors[:state].any?}",
+                placeholder: "IL",
+                required: true %>
+            <% if @business.errors[:state].any? %>
+              <p class="mt-1 text-sm text-cpm-red-600"><%= @business.errors[:state].first %></p>
+            <% end %>
+          </div>
+
+          <div>
+            <label for="business_postal_code" class="block mb-2 text-sm font-medium text-gray-900">
+              Postal Code <span class="text-red-600">*</span>
+            </label>
+            <%= f.text_field :postal_code, 
+                id: "business_postal_code",
+                class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 #{'border-red-500' if @business.errors[:postal_code].any?}",
+                placeholder: "60601",
+                required: true %>
+            <% if @business.errors[:postal_code].any? %>
+              <p class="mt-1 text-sm text-cpm-red-600"><%= @business.errors[:postal_code].first %></p>
+            <% end %>
+          </div>
+
+          <div>
+            <label for="business_country" class="block mb-2 text-sm font-medium text-gray-900">
+              Country <span class="text-red-600">*</span>
+            </label>
+            <%= f.text_field :country, 
+                id: "business_country",
+                class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 #{'border-red-500' if @business.errors[:country].any?}",
+                placeholder: "United States",
+                required: true %>
+            <% if @business.errors[:country].any? %>
+              <p class="mt-1 text-sm text-cpm-red-600"><%= @business.errors[:country].first %></p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Person Section -->
+      <div class="pb-8">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+          <svg class="w-5 h-5 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+          Primary Contact Person
+        </h2>
+        <p class="text-gray-600 mb-6">Add the primary contact person for your business. This person will be the main point of contact for your business listing.</p>
+
+        <%= f.fields_for :contact_people do |contact_f| %>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="contact_first_name" class="block mb-2 text-sm font-medium text-gray-900">
+                First Name <span class="text-red-600">*</span>
+              </label>
+              <%= contact_f.text_field :first_name, 
+                  id: "contact_first_name",
+                  class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 #{'border-red-500' if @business.contact_people.any? && @business.contact_people.first.errors[:first_name].any?}",
+                  placeholder: "John",
+                  required: true %>
+              <% if @business.contact_people.any? && @business.contact_people.first.errors[:first_name].any? %>
+                <p class="mt-1 text-sm text-cpm-red-600"><%= @business.contact_people.first.errors[:first_name].first %></p>
+              <% end %>
+            </div>
+
+            <div>
+              <label for="contact_last_name" class="block mb-2 text-sm font-medium text-gray-900">
+                Last Name <span class="text-red-600">*</span>
+              </label>
+              <%= contact_f.text_field :last_name, 
+                  id: "contact_last_name",
+                  class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 #{'border-red-500' if @business.contact_people.any? && @business.contact_people.first.errors[:last_name].any?}",
+                  placeholder: "Smith",
+                  required: true %>
+              <% if @business.contact_people.any? && @business.contact_people.first.errors[:last_name].any? %>
+                <p class="mt-1 text-sm text-cpm-red-600"><%= @business.contact_people.first.errors[:last_name].first %></p>
+              <% end %>
+            </div>
+
+            <div>
+              <label for="contact_title" class="block mb-2 text-sm font-medium text-gray-900">Title/Position</label>
+              <%= contact_f.text_field :title, 
+                  id: "contact_title",
+                  class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5",
+                  placeholder: "Owner, Manager, etc." %>
+            </div>
+
+            <div>
+              <label for="contact_email" class="block mb-2 text-sm font-medium text-gray-900">Contact Email</label>
+              <%= contact_f.email_field :email, 
+                  id: "contact_email",
+                  class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5",
+                  placeholder: "john@yourbusiness.com" %>
+            </div>
+
+            <div>
+              <label for="contact_phone" class="block mb-2 text-sm font-medium text-gray-900">Contact Phone</label>
+              <%= contact_f.text_field :phone, 
+                  id: "contact_phone",
+                  class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5",
+                  placeholder: "(555) 123-4567" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+        <%= f.submit @business.persisted? ? "Update Business Profile" : "Create Business Profile", 
+            class: "text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex-1 sm:flex-none" %>
+        <%= link_to "Cancel", @business.persisted? ? business_path : root_path, 
+            class: "text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-200 border border-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex-1 sm:flex-none" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+  

@@ -1,0 +1,113 @@
+# AdLocal Rails 8 Application Rules
+
+## Default Component Framework: Flowbite
+
+### 🎨 **Always Use Flowbite Components**
+- **Default Choice**: Use Flowbite components for ALL UI elements instead of custom CSS or other component libraries
+- **Consistency**: Maintain consistent design patterns across the entire application
+- **Responsive**: All components must be responsive and mobile-friendly
+
+### 📝 **Form Components**
+- **Input Fields**: Use Flowbite input styling: `bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5`
+- **Textareas**: Same styling as inputs: `block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-red-500 focus:border-red-500`
+- **Labels**: Always use: `block mb-2 text-sm font-medium text-gray-900`
+- **Required Fields**: Mark with `<span class="text-red-600">*</span>`
+- **Error States**: Add `border-red-500` class when validation errors exist
+- **File Uploads**: Use Flowbite file input styling with red accent colors
+
+### 🔘 **Button Components**
+- **Primary Buttons**: `text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center`
+- **Secondary Buttons**: `text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-200 border border-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center`
+- **Icon Buttons**: Include proper SVG icons with `w-5 h-5` sizing
+
+### 🏗️ **Layout Components**
+- **Cards**: Use Flowbite card classes: `block max-w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-50`
+- **Grid System**: Use Flowbite's 12-column grid: `grid grid-cols-1 lg:grid-cols-12 gap-6`
+- **Containers**: Use `max-w-4xl mx-auto px-4 py-8` for main content areas
+- **Sections**: Use `border-b border-gray-200 pb-8` for section dividers
+
+### 🎯 **Color Scheme**
+- **Primary Red**: `red-600` for primary actions and accents
+- **Hover Red**: `red-700` for button hover states
+- **Focus Red**: `red-500` for focus rings and borders
+- **Light Red**: `red-300` for focus ring backgrounds
+- **Gray Text**: `text-gray-900` for primary text
+- **Gray Secondary**: `text-gray-600` for secondary text
+- **Gray Backgrounds**: `bg-gray-50` for input backgrounds
+
+### 📱 **Responsive Design**
+- **Mobile First**: Always design for mobile first, then enhance for larger screens
+- **Breakpoints**: Use `md:` for tablets, `lg:` for desktop
+- **Grid Columns**: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3` for responsive layouts
+- **Flexbox**: Use `flex flex-col lg:flex-row` for responsive flex layouts
+
+### 🔍 **Accessibility Requirements**
+- **Labels**: Every input must have a proper `<label>` with `for` attribute
+- **IDs**: All form inputs must have unique `id` attributes
+- **Focus States**: All interactive elements must have visible focus indicators
+- **ARIA**: Use appropriate ARIA labels for complex components
+- **Color Contrast**: Ensure sufficient color contrast for text readability
+
+### 🚫 **What NOT to Use**
+- **Custom CSS Classes**: Avoid creating custom CSS classes when Flowbite components exist
+- **Bootstrap**: Do not use Bootstrap components
+- **Tailwind-only**: Don't use raw Tailwind without Flowbite component structure
+- **Inline Styles**: Avoid inline styles; use Flowbite classes instead
+- **Custom Form Styling**: Don't create custom form input styling
+
+### ✅ **Implementation Guidelines**
+1. **Check Flowbite First**: Always check if Flowbite has a component before building custom
+2. **Consistent Spacing**: Use Flowbite's spacing system (`p-2.5`, `mb-2`, `gap-6`)
+3. **Icon Integration**: Use Heroicons with Flowbite components
+4. **State Management**: Handle loading, error, and success states with Flowbite patterns
+5. **Form Validation**: Use Flowbite styling for validation feedback
+
+### 🔧 **Technical Standards**
+- **Rails 8**: Follow Rails 8 best practices
+- **Propshaft**: Use Propshaft for asset pipeline
+- **Importmap**: Use Importmap for JavaScript modules
+- **Turbo**: Ensure all forms work with Turbo (add `local: true` if needed)
+- **Devise**: Style Devise forms with Flowbite components
+
+### 📋 **Code Review Checklist**
+- [ ] All UI components use Flowbite styling
+- [ ] Forms have proper labels and IDs
+- [ ] Buttons use Flowbite button classes
+- [ ] Layout uses Flowbite grid system
+- [ ] Colors follow the red/gray color scheme
+- [ ] Components are responsive
+- [ ] Accessibility requirements met
+- [ ] No custom CSS classes for components
+- [ ] Error states properly styled
+- [ ] Focus states visible and functional
+
+### 🎨 **Examples**
+
+#### Form Input:
+```erb
+<label for="field_name" class="block mb-2 text-sm font-medium text-gray-900">
+  Field Label <span class="text-red-600">*</span>
+</label>
+<%= f.text_field :field_name, 
+    id: "field_name",
+    class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5",
+    placeholder: "Enter value",
+    required: true %>
+```
+
+#### Primary Button:
+```erb
+<%= f.submit "Save Changes", 
+    class: "text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" %>
+```
+
+#### Card Component:
+```erb
+<div class="block max-w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-50">
+  <!-- Card content -->
+</div>
+```
+
+---
+
+**Remember**: When in doubt, check the Flowbite documentation first. Consistency in design and user experience is paramount for AdLocal.

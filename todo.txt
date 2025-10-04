@@ -1,0 +1,190 @@
+Add confirmable later to allow email account verification
+
+contact person model
+(Optional later: add phone normalization with a gem like phony_rails; add URL normalization.)
+
+
+
+
+Create similar, smaller forms for Contact People (index table + “New contact” button using Flowbite modals if you like).
+
+
+
+Authorization library: add Pundit
+
+# Gemfile
+gem "pundit"
+# then
+bundle install
+bin/rails g pundit:install
+
+
+Create BusinessPolicy to ensure only owner can manage their business. Similarly for ContactPersonPolicy.
+
+File validations for logo (size/type) using Active Storage validations (custom) or a small validator.
+
+Address autocomplete (later) with a JS widget; store selected components.
+
+Multiple users per business: introduce Membership join model so a business can have team members.
+
+Admin area: either simple namespaced controllers or a gem like ActiveAdmin/RailsAdmin.
+
+Background image processing: configure ActiveJob + queue adapter.
+
+12) Testing (start small)
+
+System tests for:
+
+Sign up, redirected to “Create business”
+
+Create business, upload logo, edit details
+
+Add / edit / delete a contact person
+
+Model tests for validations.
+
+(If you prefer RSpec:)
+
+# Gemfile (group :development, :test)
+gem "rspec-rails"
+bundle install
+bin/rails generate rspec:install
+
+13) Production readiness checklist
+
+ENV secrets: Devise mailer host, storage service keys, DB URL.
+
+Active Storage service: use S3-compatible in config/storage.yml.
+
+Force SSL in production; set proper host in environment.
+
+Add basic rate limiting (Rack::Attack) if you expose public endpoints.
+
+Verify strong params only permit intended fields.
+
+14) Deployment (pick one)
+
+Render, Fly.io, or Heroku: provision Postgres, set env vars, configure storage.
+
+Run:
+
+bin/rails db:migrate
+rails assets:precompile
+
+Minimal task list you can check off
+
+Create app with Tailwind ✅
+
+Add Flowbite & configure Tailwind ✅
+
+Install Devise; generate User; set mailer host ✅
+
+Install Active Storage ✅
+
+Generate Business + ContactPerson models & migrate ✅
+
+Wire up associations & validations ✅
+
+Build controllers, routes, and views (Business + Contact People) ✅
+
+Add onboarding redirect after sign-in ✅
+
+Style forms with Tailwind/Flowbite; add logo upload preview ✅
+
+Lock down access (simple checks → Pundit later) ✅
+
+Seeds, basic tests ✅
+
+Storage config, secrets, deploy ✅
+
+
+
+
+
+
+
+
+
+
+Option A — Use a libvips buildpack (simplest)
+
+Add a vips buildpack before the Ruby buildpack so binaries are present when gems load:
+
+# Pick ONE of these:
+heroku buildpacks:add --index 1 https://github.com/Newlywords/heroku-buildpack-vips
+# or (modern stacks + HEIC/AVIF support):
+heroku buildpacks:add --index 1 https://github.com/mariochavez/heroku-buildpack-libvips
+
+
+Why this works: these buildpacks drop prebuilt libvips (and, for the second one, libheif/AVIF) into your slug for current Heroku stacks (Heroku-22/Heroku-24). 
+GitHub
++1
+
+Option B — Use the official APT buildpack
+
+If you prefer exact Ubuntu packages, add the APT buildpack and list packages in an Aptfile:
+
+heroku buildpacks:add --index 1 heroku-community/apt
+
+
+Then create an Aptfile in your repo:
+
+Heroku-22 (Ubuntu 22.04 “jammy”)
+
+libvips42
+libvips-dev
+libvips-tools
+
+
+Launchpad
++2
+Launchpad
++2
+
+Heroku-24 (Ubuntu 24.04 “noble”)
+
+libvips42t64
+libvips-dev
+libvips-tools
+
+
+Launchpad
++1
+
+(Managing buildpacks / APT buildpack docs for reference. 
+Heroku Dev Center
++1
+)
+
+Rails config checklist
+
+Gemfile:
+
+gem "image_processing" # Active Storage variants
+gem "ruby-vips"        # optional explicit dependency
+
+
+Ensure Active Storage uses vips (Rails 7+ often defaults to it; you can set it explicitly):
+
+# config/application.rb or appropriate env:
+config.active_storage.variant_processor = :vips
+
+
+(The default depends on config.load_defaults; guides note you can choose vips or MiniMagick.) 
+Ruby on Rails Guides
+
+Active Storage service: don’t use :local on Heroku’s ephemeral disk—use S3 (or similar) in production. 
+Heroku Dev Center
+
+Sanity checks (on a one-off dyno)
+heroku run bash
+vips --version
+ruby -e "require 'vips'; puts Vips::version_string"
+
+TL;DR
+
+Heroku doesn’t ship libvips by default, but it’s a solved problem: add a vips/apt buildpack (first in order), set variant_processor = :vips, and use S3 in production. You’ll be good to go. 
+GitHub
++2
+GitHub
++2

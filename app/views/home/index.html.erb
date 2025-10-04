@@ -1,87 +1,108 @@
 <%# Hero Section %>
-<section class="hero-section">
-  <div class="container-cpm">
+<section class="bg-white py-16 lg:py-24">
+  <div class="max-w-4xl mx-auto px-4">
     <div class="text-center">
-      <h1 class="text-hero font-bold text-cpm-black mb-8 text-balance">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-8 text-balance">
         Local journalism.
       </h1>
-      <p class="text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed mb-12">
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed mb-12">
         Bringing you the stories that matter most to your community. 
         Trusted news, deep reporting, and local voices you can count on.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <button type="button" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
-          Read Our Stories
-        </button>
-        
         <!-- Flowbite Modal Trigger -->
-        <button data-modal-target="subscribe-modal" data-modal-toggle="subscribe-modal" type="button" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+        <button data-modal-target="subscribe-modal" data-modal-toggle="subscribe-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-200 border border-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
           Subscribe
         </button>
+        
+        <% unless user_signed_in? %>
+          <%= link_to "Sign In", new_user_session_path, class: "text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-200 border border-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" %>
+          <%= link_to "Sign Up", new_user_registration_path, class: "text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" %>
+        <% end %>
       </div>
     </div>
   </div>
 </section>
 
+<%# Business Dashboard CTA for logged-in users %>
+<% if user_signed_in? %>
+<section class="bg-red-50 py-16">
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="text-center">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Welcome back!</h2>
+      <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+        Manage your business profile, update contact information, and connect with your local community.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <%= link_to "View Dashboard", business_path, class: "text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" %>
+        <% unless current_user.business %>
+          <%= link_to "Create Business Profile", new_business_path, class: "text-red-600 bg-white border border-red-600 hover:bg-red-50 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>
+<% end %>
+
 <%# Featured Stories Section %>
-<section class="section bg-gray-50">
-  <div class="container-cpm">
+<section class="bg-gray-50 py-16">
+  <div class="max-w-6xl mx-auto px-4">
     <div class="text-center mb-16">
-      <h2 class="text-display font-bold text-cpm-black mb-4">Featured Stories</h2>
+      <h2 class="text-4xl font-bold text-gray-900 mb-4">Featured Stories</h2>
       <p class="text-lg text-gray-600 max-w-2xl mx-auto">
         The most important stories from your community, reported with depth and care.
       </p>
     </div>
     
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- Story Card 1 -->
-      <article class="card p-6 hover:shadow-lg transition-shadow duration-300">
+      <article class="block max-w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-50">
         <div class="aspect-video bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
           <span class="text-gray-500">Story Image</span>
         </div>
-        <h3 class="text-xl font-semibold text-cpm-black mb-3">Community Development Initiative</h3>
+        <h3 class="text-xl font-semibold text-gray-900 mb-3">Community Development Initiative</h3>
         <p class="text-gray-600 mb-4">
           How local residents are working together to revitalize downtown neighborhoods 
           and create affordable housing solutions.
         </p>
-        <a href="#" class="text-primary-500 hover:text-primary-600 font-medium">Read More →</a>
+        <a href="#" class="text-red-600 hover:text-red-700 font-medium">Read More →</a>
       </article>
 
       <!-- Story Card 2 -->
-      <article class="card p-6 hover:shadow-lg transition-shadow duration-300">
+      <article class="block max-w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-50">
         <div class="aspect-video bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
           <span class="text-gray-500">Story Image</span>
         </div>
-        <h3 class="text-xl font-semibold text-cpm-black mb-3">Education Reform Updates</h3>
+        <h3 class="text-xl font-semibold text-gray-900 mb-3">Education Reform Updates</h3>
         <p class="text-gray-600 mb-4">
           Breaking down the latest changes to local school funding and what it means 
           for students and families in our district.
         </p>
-        <a href="#" class="text-primary-500 hover:text-primary-600 font-medium">Read More →</a>
+        <a href="#" class="text-red-600 hover:text-red-700 font-medium">Read More →</a>
       </article>
 
       <!-- Story Card 3 -->
-      <article class="card p-6 hover:shadow-lg transition-shadow duration-300">
+      <article class="block max-w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-50">
         <div class="aspect-video bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
           <span class="text-gray-500">Story Image</span>
         </div>
-        <h3 class="text-xl font-semibold text-cpm-black mb-3">Environmental Action</h3>
+        <h3 class="text-xl font-semibold text-gray-900 mb-3">Environmental Action</h3>
         <p class="text-gray-600 mb-4">
           Local activists push for green energy initiatives as the city considers 
           new sustainability measures for the coming decade.
         </p>
-        <a href="#" class="text-primary-500 hover:text-primary-600 font-medium">Read More →</a>
+        <a href="#" class="text-red-600 hover:text-red-700 font-medium">Read More →</a>
       </article>
     </div>
   </div>
 </section>
 
 <%# About Section - Dark Background %>
-<section class="dark-section section">
-  <div class="container-cpm">
+<section class="bg-gray-900 py-16">
+  <div class="max-w-6xl mx-auto px-4">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
       <div>
-        <h2 class="text-display font-bold text-cpm-white mb-6">About Us</h2>
+        <h2 class="text-4xl font-bold text-white mb-6">About Us</h2>
         <div class="space-y-6">
           <p class="text-lg leading-relaxed text-gray-300">
             AdLocal is a nonprofit organization committed to providing our community with 
@@ -94,12 +115,12 @@
           </p>
         </div>
         <div class="mt-8 flex flex-col sm:flex-row gap-4">
-          <button type="button" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
+          <button type="button" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
             Learn More About Our Mission
           </button>
           
           <!-- Flowbite Dropdown -->
-          <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" type="button" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 inline-flex items-center">
+          <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" type="button" class="text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-200 border border-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
             Resources 
             <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
@@ -118,24 +139,24 @@
         </div>
       </div>
       
-      <div class="bg-gray-800 rounded-xl p-8">
-        <h3 class="text-2xl font-bold text-cpm-white mb-6">Stay Connected</h3>
+      <div class="block max-w-full p-8 bg-gray-800 border border-gray-700 rounded-lg shadow">
+        <h3 class="text-2xl font-bold text-white mb-6">Stay Connected</h3>
         <div class="space-y-4">
           <div class="flex items-center space-x-3">
-            <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
-              <span class="text-cpm-white font-bold text-sm">📧</span>
+            <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+              <span class="text-white font-bold text-sm">📧</span>
             </div>
             <span class="text-gray-300">newsletter@adlocal.com</span>
           </div>
           <div class="flex items-center space-x-3">
-            <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
-              <span class="text-cpm-white font-bold text-sm">📱</span>
+            <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+              <span class="text-white font-bold text-sm">📱</span>
             </div>
             <span class="text-gray-300">Follow us on social media</span>
           </div>
           <div class="flex items-center space-x-3">
-            <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
-              <span class="text-cpm-white font-bold text-sm">📰</span>
+            <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+              <span class="text-white font-bold text-sm">📰</span>
             </div>
             <span class="text-gray-300">Subscribe to our newsletter</span>
           </div>
@@ -146,18 +167,18 @@
 </section>
 
 <%# Newsletter Signup %>
-<section class="section bg-primary-500">
-  <div class="container-cpm text-center">
-    <h2 class="text-display font-bold text-cpm-white mb-4">Stay Informed</h2>
-    <p class="text-xl text-cpm-white mb-8 max-w-2xl mx-auto">
+<section class="bg-red-600 py-16">
+  <div class="max-w-4xl mx-auto px-4 text-center">
+    <h2 class="text-4xl font-bold text-white mb-4">Stay Informed</h2>
+    <p class="text-xl text-white mb-8 max-w-2xl mx-auto">
       Get the latest local news and stories delivered directly to your inbox. 
       Stay connected with your community.
     </p>
     <form class="max-w-md mx-auto flex flex-col sm:flex-row gap-4">
       <div class="relative flex-1">
-        <input type="email" placeholder="Enter your email" class="form-input flex-1">
+        <input type="email" placeholder="Enter your email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5">
       </div>
-      <button type="submit" class="text-red-600 bg-white border border-red-600 hover:bg-red-50 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none">
+      <button type="submit" class="text-red-600 bg-white border border-red-600 hover:bg-red-50 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
         Subscribe
       </button>
     </form>
