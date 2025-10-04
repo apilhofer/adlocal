@@ -1,29 +1,29 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  description: MyText
-  website: MyString
-  email: MyString
-  phone: MyString
-  address_1: MyString
-  address_2: MyString
-  city: MyString
-  state: MyString
-  postal_code: MyString
-  country: MyString
+  name: Test Business One
+  description: A wonderful test business that serves the community
+  website: https://www.testbusinessone.com
+  email: contact@testbusinessone.com
+  phone: (555) 123-4567
+  address_1: 123 Main Street
+  address_2: Suite 100
+  city: Chicago
+  state: IL
+  postal_code: 60601
+  country: United States
   user: one
 
 two:
-  name: MyString
-  description: MyText
-  website: MyString
-  email: MyString
-  phone: MyString
-  address_1: MyString
-  address_2: MyString
-  city: MyString
-  state: MyString
-  postal_code: MyString
-  country: MyString
+  name: Test Business Two
+  description: Another fantastic test business
+  website: https://www.testbusinesstwo.com
+  email: info@testbusinesstwo.com
+  phone: (555) 987-6543
+  address_1: 456 Oak Avenue
+  address_2: 
+  city: Chicago
+  state: IL
+  postal_code: 60602
+  country: United States
   user: two

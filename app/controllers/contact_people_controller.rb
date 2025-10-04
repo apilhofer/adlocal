@@ -14,7 +14,7 @@ class ContactPeopleController < ApplicationController
   def create
     @contact = @business.contact_people.new(contact_params)
     if @contact.save
-      redirect_to business_contact_people_path, notice: "Contact added."
+      redirect_to business_path, notice: "Contact added."
     else
       render :new, status: :unprocessable_entity
     end
