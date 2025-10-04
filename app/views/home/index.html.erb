@@ -1,0 +1,208 @@
+<%# Hero Section %>
+<section class="hero-section">
+  <div class="container-cpm">
+    <div class="text-center">
+      <h1 class="text-hero font-bold text-cpm-black mb-8 text-balance">
+        Local journalism.
+      </h1>
+      <p class="text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed mb-12">
+        Bringing you the stories that matter most to your community. 
+        Trusted news, deep reporting, and local voices you can count on.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button type="button" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
+          Read Our Stories
+        </button>
+        
+        <!-- Flowbite Modal Trigger -->
+        <button data-modal-target="subscribe-modal" data-modal-toggle="subscribe-modal" type="button" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+          Subscribe
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%# Featured Stories Section %>
+<section class="section bg-gray-50">
+  <div class="container-cpm">
+    <div class="text-center mb-16">
+      <h2 class="text-display font-bold text-cpm-black mb-4">Featured Stories</h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        The most important stories from your community, reported with depth and care.
+      </p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Story Card 1 -->
+      <article class="card p-6 hover:shadow-lg transition-shadow duration-300">
+        <div class="aspect-video bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
+          <span class="text-gray-500">Story Image</span>
+        </div>
+        <h3 class="text-xl font-semibold text-cpm-black mb-3">Community Development Initiative</h3>
+        <p class="text-gray-600 mb-4">
+          How local residents are working together to revitalize downtown neighborhoods 
+          and create affordable housing solutions.
+        </p>
+        <a href="#" class="text-primary-500 hover:text-primary-600 font-medium">Read More →</a>
+      </article>
+
+      <!-- Story Card 2 -->
+      <article class="card p-6 hover:shadow-lg transition-shadow duration-300">
+        <div class="aspect-video bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
+          <span class="text-gray-500">Story Image</span>
+        </div>
+        <h3 class="text-xl font-semibold text-cpm-black mb-3">Education Reform Updates</h3>
+        <p class="text-gray-600 mb-4">
+          Breaking down the latest changes to local school funding and what it means 
+          for students and families in our district.
+        </p>
+        <a href="#" class="text-primary-500 hover:text-primary-600 font-medium">Read More →</a>
+      </article>
+
+      <!-- Story Card 3 -->
+      <article class="card p-6 hover:shadow-lg transition-shadow duration-300">
+        <div class="aspect-video bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
+          <span class="text-gray-500">Story Image</span>
+        </div>
+        <h3 class="text-xl font-semibold text-cpm-black mb-3">Environmental Action</h3>
+        <p class="text-gray-600 mb-4">
+          Local activists push for green energy initiatives as the city considers 
+          new sustainability measures for the coming decade.
+        </p>
+        <a href="#" class="text-primary-500 hover:text-primary-600 font-medium">Read More →</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<%# About Section - Dark Background %>
+<section class="dark-section section">
+  <div class="container-cpm">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div>
+        <h2 class="text-display font-bold text-cpm-white mb-6">About Us</h2>
+        <div class="space-y-6">
+          <p class="text-lg leading-relaxed text-gray-300">
+            AdLocal is a nonprofit organization committed to providing our community with 
+            accessible and trusted news, information and local journalism that matters to you.
+          </p>
+          <p class="text-lg leading-relaxed text-gray-300">
+            We originated as a home for independent journalism, where our award-winning 
+            journalists ask tough questions, dig deep for answers, and bring you the stories 
+            that shape our local community and beyond.
+          </p>
+        </div>
+        <div class="mt-8 flex flex-col sm:flex-row gap-4">
+          <button type="button" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
+            Learn More About Our Mission
+          </button>
+          
+          <!-- Flowbite Dropdown -->
+          <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" type="button" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 inline-flex items-center">
+            Resources 
+            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+            </svg>
+          </button>
+          
+          <!-- Dropdown menu -->
+          <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+            <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Annual Report</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Financials</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Board Members</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Contact Us</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-gray-800 rounded-xl p-8">
+        <h3 class="text-2xl font-bold text-cpm-white mb-6">Stay Connected</h3>
+        <div class="space-y-4">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
+              <span class="text-cpm-white font-bold text-sm">📧</span>
+            </div>
+            <span class="text-gray-300">newsletter@adlocal.com</span>
+          </div>
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
+              <span class="text-cpm-white font-bold text-sm">📱</span>
+            </div>
+            <span class="text-gray-300">Follow us on social media</span>
+          </div>
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
+              <span class="text-cpm-white font-bold text-sm">📰</span>
+            </div>
+            <span class="text-gray-300">Subscribe to our newsletter</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%# Newsletter Signup %>
+<section class="section bg-primary-500">
+  <div class="container-cpm text-center">
+    <h2 class="text-display font-bold text-cpm-white mb-4">Stay Informed</h2>
+    <p class="text-xl text-cpm-white mb-8 max-w-2xl mx-auto">
+      Get the latest local news and stories delivered directly to your inbox. 
+      Stay connected with your community.
+    </p>
+    <form class="max-w-md mx-auto flex flex-col sm:flex-row gap-4">
+      <div class="relative flex-1">
+        <input type="email" placeholder="Enter your email" class="form-input flex-1">
+      </div>
+      <button type="submit" class="text-red-600 bg-white border border-red-600 hover:bg-red-50 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none">
+        Subscribe
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- Flowbite Modal -->
+<div id="subscribe-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+  <div class="relative p-4 w-full max-w-md max-h-full">
+    <!-- Modal content -->
+    <div class="relative bg-white rounded-lg shadow">
+      <!-- Modal header -->
+      <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+        <h3 class="text-xl font-semibold text-gray-900">
+          Subscribe to AdLocal
+        </h3>
+        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="subscribe-modal">
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="p-4 md:p-5">
+        <form class="space-y-4">
+          <div>
+            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Your email</label>
+            <input type="email" name="email" id="email" class="form-input" placeholder="name@company.com" required>
+          </div>
+          <div>
+            <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Your name</label>
+            <input type="text" name="name" id="name" class="form-input" placeholder="John Doe" required>
+          </div>
+          <div class="flex items-start">
+            <div class="flex items-center h-5">
+              <input id="remember" type="checkbox" value="" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300" required>
+            </div>
+            <label for="remember" class="ms-2 text-sm font-medium text-gray-900">I agree to the <a href="#" class="text-primary-600 hover:underline">terms and conditions</a></label>
+          </div>
+          <button type="submit" class="w-full text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none">
+            Subscribe to newsletter
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title><%= content_for(:title) || "Adlocal" %></title>
+    <title><%= content_for(:title) || "AdLocal" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="AdLocal - Local journalism for your community">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -20,11 +21,92 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    
+    <%# Tailwind CSS - Direct link to avoid import issues %>
+    <%= stylesheet_link_tag "/tailwind.css", "data-turbo-track": "reload" %>
+    
+    <%# Flowbite CDN %>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/3.1.2/flowbite.min.js"></script>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="font-sans antialiased">
+    <!-- Navigation Header -->
+    <header class="bg-cpm-white border-b border-gray-200 sticky top-0 z-50">
+      <nav class="container-cpm">
+        <div class="flex items-center justify-between h-16">
+          <!-- Logo -->
+          <div class="flex items-center space-x-3">
+            <!-- Logo Icon (placeholder for concentric C's) -->
+            <div class="w-8 h-8 bg-cpm-black rounded-full flex items-center justify-center">
+              <span class="text-cpm-white font-bold text-sm">C</span>
+            </div>
+            <div class="logo-text">
+              <span class="logo-primary">Ad</span><span class="logo-accent">Local</span>
+            </div>
+          </div>
+
+          <!-- Navigation Links -->
+          <div class="hidden md:flex items-center space-x-8">
+            <a href="#" class="nav-link">News</a>
+            <a href="#" class="nav-link">Community</a>
+            <a href="#" class="nav-link">Events</a>
+          </div>
+
+          <!-- Mobile menu button -->
+          <button data-collapse-toggle="mobile-menu" type="button" class="md:hidden inline-flex items-center justify-center p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200" aria-controls="mobile-menu" aria-expanded="false">
+            <span class="sr-only">Open main menu</span>
+            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+            </svg>
+          </button>
+
+          <!-- Donate Button -->
+          <div class="flex items-center space-x-4">
+            <button type="button" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
+              Donate
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Mobile menu -->
+      <div class="hidden" id="mobile-menu">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200">
+          <a href="#" class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-primary-500">News</a>
+          <a href="#" class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-primary-500">Community</a>
+          <a href="#" class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-primary-500">Events</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
       <%= yield %>
     </main>
+
+    <!-- Footer -->
+    <footer class="bg-cpm-black text-cpm-white">
+      <div class="container-cpm py-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h3 class="text-2xl font-bold mb-4">About Us</h3>
+            <p class="text-gray-300 leading-relaxed">
+              AdLocal is committed to providing our community with accessible and trusted news, 
+              information and local journalism that matters to you.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold mb-4">Our Mission</h3>
+            <p class="text-gray-300 leading-relaxed">
+              We ask tough questions, dig deep for answers, and bring you the stories that 
+              shape our local community and beyond.
+            </p>
+          </div>
+        </div>
+        <div class="border-t border-gray-800 mt-12 pt-8 text-center">
+          <p class="text-gray-400">&copy; <%= Date.current.year %> AdLocal. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
