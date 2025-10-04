@@ -73,7 +73,7 @@
       <nav class="max-w-6xl mx-auto px-4">
         <div class="flex items-center justify-between h-16">
           <!-- Logo -->
-          <div class="flex items-center space-x-3">
+          <%= link_to root_path, class: "flex items-center space-x-3 hover:opacity-80 transition-opacity" do %>
             <!-- Logo Icon (placeholder for concentric C's) -->
             <div class="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center">
               <span class="text-white font-bold text-sm">C</span>
@@ -81,7 +81,7 @@
             <div class="text-xl font-bold">
               <span class="text-gray-900">Ad</span><span class="text-red-600">Local</span>
             </div>
-          </div>
+          <% end %>
 
           <!-- Navigation Links -->
           <div class="hidden md:flex items-center space-x-8">
