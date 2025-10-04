@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# Quality check script for AdLocal Rails application
+# Run all code quality checks
+
+set -e
+
+echo "🔍 Running AdLocal Quality Checks..."
+echo "=================================="
+
+# Check if we're in the right directory
+if [ ! -f "Gemfile" ]; then
+  echo "❌ Error: Please run this script from the Rails application root directory"
+  exit 1
+fi
+
+echo ""
+echo "📦 Checking Ruby code quality with RuboCop..."
+if bundle exec rubocop; then
+  echo "✅ Ruby code quality: PASSED"
+else
+  echo "❌ Ruby code quality: FAILED"
+  exit 1
+fi
+
+echo ""
+echo "🔒 Running security check with Brakeman..."
+if bundle exec brakeman --no-pager; then
+  echo "✅ Security check: PASSED"
+else
+  echo "⚠️  Security check: WARNINGS FOUND (review above)"
+fi
+
+echo ""
+echo "📝 Checking JavaScript code quality with ESLint..."
+if npx eslint app/javascript/; then
+  echo "✅ JavaScript code quality: PASSED"
+else
+  echo "❌ JavaScript code quality: FAILED"
+  exit 1
+fi
+
+echo ""
+echo "🎨 Checking CSS code quality with Stylelint..."
+if npx stylelint "app/assets/**/*.css"; then
+  echo "✅ CSS code quality: PASSED"
+else
+  echo "❌ CSS code quality: FAILED"
+  exit 1
+fi
+
+echo ""
+echo "🧪 Running Rails tests..."
+if bundle exec rails test; then
+  echo "✅ Rails tests: PASSED"
+else
+  echo "❌ Rails tests: FAILED"
+  exit 1
+fi
+
+echo ""
+echo "🎉 All quality checks completed successfully!"
+echo "Your code is ready for commit! 🚀"
