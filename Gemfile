@@ -16,12 +16,11 @@ gem 'importmap-rails'
 gem 'turbo-rails'
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem 'stimulus-rails'
-# Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
-gem 'tailwindcss-rails'
+# Bootstrap is loaded via CDN and npm
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem 'jbuilder'
 
-#use devise for authentication
+# use devise for authentication
 gem 'devise'
 
 # Image processing for Active Storage variants

@@ -1,58 +1,64 @@
-<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-  <div class="sm:mx-auto sm:w-full sm:max-w-md">
-    <h2 class="mt-6 text-center text-3xl font-bold text-gray-900">
-      Sign in to your account
-    </h2>
-    <p class="mt-2 text-center text-sm text-gray-600">
-      Welcome back to AdLocal
-    </p>
-  </div>
-
-  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-lg">
-    <div class="bg-white py-10 px-8 shadow-lg rounded-lg border border-gray-200">
-      <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-6" }) do |f| %>
-        <div class="max-w-md mx-auto">
-          <%= f.label :email, class: "block mb-2 text-sm font-medium text-gray-900" %>
+<div class="min-vh-100 bg-light d-flex flex-column justify-content-center py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="text-center mb-4">
+          <h2 class="h2 fw-bold text-dark">
+            Sign in to your account
+          </h2>
+          <p class="text-muted">
+            Welcome back to AdLocal
+          </p>
+        </div>
+        
+        <div class="card shadow">
+          <div class="card-body p-4">
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+        <div class="mb-3">
+          <%= f.label :email, class: "form-label" %>
           <%= f.email_field :email, 
               autofocus: true, 
               autocomplete: "email", 
-              class: "w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors",
+              class: "form-control",
               placeholder: "Enter your email address" %>
         </div>
 
-        <div class="max-w-md mx-auto">
-          <%= f.label :password, class: "block mb-2 text-sm font-medium text-gray-900" %>
+        <div class="mb-3">
+          <%= f.label :password, class: "form-label" %>
           <%= f.password_field :password, 
               autocomplete: "current-password", 
-              class: "w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors",
+              class: "form-control",
               placeholder: "Enter your password" %>
         </div>
 
         <% if devise_mapping.rememberable? %>
-          <div class="max-w-md mx-auto flex items-center justify-between">
-            <div class="flex items-center">
-              <%= f.check_box :remember_me, class: "h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded" %>
-              <%= f.label :remember_me, class: "ml-2 block text-sm text-gray-900" %>
+          <div class="mb-3 d-flex justify-content-between align-items-center">
+            <div class="form-check">
+              <%= f.check_box :remember_me, class: "form-check-input" %>
+              <%= f.label :remember_me, class: "form-check-label" %>
             </div>
-            <div class="text-sm">
-              <%= link_to "Forgot password?", new_password_path(resource_name), class: "font-medium text-red-600 hover:text-red-700 transition-colors" %>
+            <div>
+              <%= link_to "Forgot password?", new_password_path(resource_name), class: "text-primary text-decoration-none small" %>
             </div>
           </div>
         <% end %>
 
-        <div class="pt-2 max-w-md mx-auto">
-          <button type="submit" class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-semibold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary btn-lg">
             Sign In
           </button>
         </div>
       <% end %>
       
       <!-- Sign Up Link -->
-      <div class="mt-8 text-center">
-        <p class="text-sm text-gray-600">
+      <div class="text-center mt-4">
+        <p class="text-muted small mb-0">
           Don't have an account?
-          <%= link_to "Create one here", new_user_registration_path, class: "font-semibold text-red-600 hover:text-red-700 transition-colors" %>
+          <%= link_to "Create one here", new_user_registration_path, class: "text-primary text-decoration-none fw-semibold" %>
         </p>
+      </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

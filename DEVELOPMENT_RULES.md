@@ -1,12 +1,12 @@
 # Development Rules for AdLocal Rails Application
 
 ## Project Overview
-This is a Ruby on Rails 8 application with PostgreSQL 16, Tailwind CSS, and Flowbite components.
+This is a Ruby on Rails 8 application with PostgreSQL 16 and Bootstrap 5.
 
 ## Technology Stack
 - **Backend**: Ruby on Rails 8.0.3
 - **Database**: PostgreSQL 16
-- **Frontend**: Tailwind CSS + Flowbite
+- **Frontend**: Bootstrap 5
 - **JavaScript**: Stimulus + Turbo (Hotwire)
 - **Asset Pipeline**: Propshaft
 - **Job Processing**: Solid Queue
@@ -34,9 +34,9 @@ This is a Ruby on Rails 8 application with PostgreSQL 16, Tailwind CSS, and Flow
 - Use semicolons
 
 ### CSS Standards
-- Use Tailwind CSS utility classes
+- Use Bootstrap 5 utility classes and components
 - Follow the rules defined in `.stylelintrc.json`
-- Use Flowbite components when available
+- Use Bootstrap components when available
 - Custom CSS should be minimal and component-specific
 - Use CSS custom properties for theme values
 - Maximum line length: 120 characters
@@ -241,7 +241,7 @@ end
 ### Development Tools
 - **Ruby**: RVM or rbenv for version management
 - **Database**: PostgreSQL 16
-- **IDE**: VS Code with Ruby, Rails, and Tailwind extensions
+- **IDE**: VS Code with Ruby, Rails, and Bootstrap extensions
 - **Git**: GitHub for version control
 - **Testing**: Rails built-in testing framework
 
@@ -264,7 +264,7 @@ end
 1. **Database connection issues**: Check PostgreSQL service and credentials
 2. **Asset compilation issues**: Clear Rails cache and rebuild assets
 3. **JavaScript errors**: Check browser console and Stimulus controller setup
-4. **Style issues**: Verify Tailwind CSS compilation and Flowbite integration
+4. **Style issues**: Verify Bootstrap CSS compilation and component integration
 
 ### Getting Help
 1. Check Rails guides and documentation
@@ -299,5 +299,10 @@ end
 ### Version 1.0.0
 - Initial Rails 8 application setup
 - PostgreSQL 16 integration
-- Tailwind CSS and Flowbite setup
+- Bootstrap 5 setup
 - Development rules and standards established
+
+### Version 1.1.0
+- Migrated from Tailwind CSS + Flowbite to Bootstrap 5
+- Updated all views to use Bootstrap components
+- Simplified frontend framework for better maintainability

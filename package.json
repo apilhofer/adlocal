@@ -1,15 +1,13 @@
 {
   "name": "adlocal",
   "version": "1.0.0",
-  "description": "AdLocal Rails 8 application with PostgreSQL, Tailwind CSS, and Flowbite",
+  "description": "AdLocal Rails 8 application with PostgreSQL and Bootstrap",
   "private": true,
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
   },
   "scripts": {
-    "build": "tailwindcss -i ./app/assets/stylesheets/tailwind-input.css -o ./public/tailwind.css --watch",
-    "build:css": "tailwindcss -i ./app/assets/stylesheets/tailwind-input.css -o ./public/tailwind.css",
     "lint:js": "eslint app/javascript/**/*.js",
     "lint:css": "stylelint 'app/assets/**/*.css'",
     "lint:fix": "npm run lint:js -- --fix && npm run lint:css -- --fix",
@@ -18,19 +16,15 @@
   "devDependencies": {
     "eslint": "^8.57.0",
     "stylelint": "^16.0.0",
-    "stylelint-config-standard": "^36.0.0",
-    "stylelint-config-tailwindcss": "^0.0.7",
-    "tailwindcss": "^3.4.0"
+    "stylelint-config-standard": "^36.0.0"
   },
   "dependencies": {
-    "flowbite": "^3.1.2"
   },
   "keywords": [
     "rails",
     "ruby",
     "postgresql",
-    "tailwindcss",
-    "flowbite",
+    "bootstrap",
     "stimulus",
     "turbo"
   ],

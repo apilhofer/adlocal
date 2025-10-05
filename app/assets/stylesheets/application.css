@@ -9,4 +9,65 @@
  * Consider organizing styles into separate files for maintainability.
  */
 
-/* Additional custom styles can go here */
+/* Bootstrap is loaded via CDN */
+
+/* AdLocal custom styles */
+:root {
+  --bs-primary: #dc3545;
+  --bs-primary-rgb: 220, 53, 69;
+  --bs-secondary: #6c757d;
+  --bs-secondary-rgb: 108, 117, 125;
+}
+
+/* Custom AdLocal styles */
+.btn-primary {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-primary:hover {
+  background-color: #b02a37;
+  border-color: #a02834;
+}
+
+.text-primary {
+  color: #dc3545 !important;
+}
+
+.border-primary {
+  border-color: #dc3545 !important;
+}
+
+/* Flash message styling */
+.flash-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1050;
+  max-width: 400px;
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Logo styling */
+.logo-text {
+  font-weight: bold;
+}
+
+.logo-text .ad {
+  color: #000;
+}
+
+.logo-text .local {
+  color: #dc3545;
+}
