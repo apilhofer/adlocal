@@ -49,7 +49,7 @@ class CampaignTest < ActiveSupport::TestCase
   end
 
   test "status should be valid" do
-    valid_statuses = %w[draft active completed]
+    valid_statuses = %w[draft ready active completed]
     valid_statuses.each do |status|
       @campaign.status = status
       assert @campaign.valid?, "#{status} should be valid"
@@ -123,6 +123,9 @@ class CampaignTest < ActiveSupport::TestCase
     @campaign.status = "draft"
     assert_equal "badge bg-secondary", @campaign.status_badge_class
     
+    @campaign.status = "ready"
+    assert_equal "badge bg-info", @campaign.status_badge_class
+    
     @campaign.status = "active"
     assert_equal "badge bg-success", @campaign.status_badge_class
     
@@ -141,8 +144,8 @@ class CampaignTest < ActiveSupport::TestCase
     assert_not @campaign.can_edit?
   end
 
-  test "can_generate_ads? should return true for complete active campaigns" do
-    @campaign.status = "active"
+  test "can_generate_ads? should return true for complete draft campaigns" do
+    @campaign.status = "draft"
     @campaign.brief = "This is a valid brief with enough content"
     @campaign.goals = "Test goals"
     @campaign.audience = "Test audience"
@@ -154,19 +157,51 @@ class CampaignTest < ActiveSupport::TestCase
     @campaign.tone_words = ["bold"]
     assert @campaign.can_generate_ads?
     
-    @campaign.status = "draft"
+    @campaign.status = "ready"
     assert_not @campaign.can_generate_ads?
     
     @campaign.status = "active"
+    assert_not @campaign.can_generate_ads?
+    
+    @campaign.status = "completed"
+    assert_not @campaign.can_generate_ads?
+    
+    @campaign.status = "draft"
     @campaign.brief = "Short"
     assert_not @campaign.can_generate_ads?
   end
 
-  test "can_generate_ads? should return false for incomplete campaigns" do
-    @campaign.status = "active"
+  test "can_mark_ready? should return true for complete draft campaigns" do
+    @campaign.status = "draft"
     @campaign.brief = "This is a valid brief with enough content"
-    # Missing other required fields
-    assert_not @campaign.can_generate_ads?
+    @campaign.goals = "Test goals"
+    @campaign.audience = "Test audience"
+    @campaign.offer = "Test offer"
+    @campaign.cta = "Test CTA"
+    @campaign.ad_sizes = ["300x250"]
+    @campaign.brand_colors = ["#FF0000"]
+    @campaign.brand_fonts = "Arial"
+    @campaign.tone_words = ["bold"]
+    assert @campaign.can_mark_ready?
+    
+    @campaign.status = "ready"
+    assert_not @campaign.can_mark_ready?
+  end
+
+  test "can_mark_active? should return true for ready campaigns" do
+    @campaign.status = "ready"
+    assert @campaign.can_mark_active?
+    
+    @campaign.status = "draft"
+    assert_not @campaign.can_mark_active?
+  end
+
+  test "can_mark_completed? should return true for active campaigns" do
+    @campaign.status = "active"
+    assert @campaign.can_mark_completed?
+    
+    @campaign.status = "ready"
+    assert_not @campaign.can_mark_completed?
   end
 
   test "should belong to business" do

@@ -57,15 +57,14 @@
                 <label for="campaign_status" class="form-label fw-bold">Status</label>
                 <%= f.select :status,
                     options_for_select([
-                      ['Draft', 'draft'],
-                      ['Active', 'active'],
-                      ['Completed', 'completed']
+                      ['Draft', 'draft']
                     ], @campaign.status),
                     {},
                     {
                       id: "campaign_status",
                       class: "form-control"
                     } %>
+                <div class="form-text">New campaigns start as drafts. Status will change as you progress through the workflow.</div>
               </div>
             </div>
           </div>

@@ -8,7 +8,7 @@ class Campaign < ApplicationRecord
   validates :name, presence: true, length: { maximum: 100 }
   validates :business, presence: true
   validates :brief, length: { minimum: 20 }, allow_blank: true
-  validates :status, inclusion: { in: %w[draft active completed] }
+  validates :status, inclusion: { in: %w[draft ready active completed] }
 
   # JSON fields
   serialize :brand_colors, coder: JSON
@@ -17,9 +17,21 @@ class Campaign < ApplicationRecord
 
   # Scopes
   scope :draft, -> { where(status: 'draft') }
+  scope :ready, -> { where(status: 'ready') }
   scope :active, -> { where(status: 'active') }
   scope :completed, -> { where(status: 'completed') }
   scope :recent, -> { order(created_at: :desc) }
+  scope :by_status_priority, -> { 
+    order(
+      Arel.sql("CASE status 
+        WHEN 'active' THEN 1 
+        WHEN 'ready' THEN 2 
+        WHEN 'draft' THEN 3 
+        WHEN 'completed' THEN 4 
+        ELSE 5 END"),
+      created_at: :desc
+    )
+  }
 
   # Methods
   def brand_colors_array
@@ -50,6 +62,8 @@ class Campaign < ApplicationRecord
     case status
     when 'draft'
       'badge bg-secondary'
+    when 'ready'
+      'badge bg-info'
     when 'active'
       'badge bg-success'
     when 'completed'
@@ -64,8 +78,8 @@ class Campaign < ApplicationRecord
   end
 
   def can_generate_ads?
-    # Campaign must be active and have all required information
-    return false unless status == 'active'
+    # Campaign must be complete and in draft status to generate ads
+    return false unless status == 'draft'
     
     # Check for required fields
     required_fields_present = brief.present? && 
@@ -84,8 +98,24 @@ class Campaign < ApplicationRecord
     required_fields_present && brand_profile_present
   end
 
+  def can_mark_ready?
+    # Can mark as ready if all information is complete and ads have been generated
+    # For now, we'll assume ads are generated when status is ready
+    status == 'draft' && can_generate_ads?
+  end
+
+  def can_mark_active?
+    # Can mark as active if campaign is ready and ads exist
+    status == 'ready'
+  end
+
+  def can_mark_completed?
+    # Can mark as completed if campaign is active
+    status == 'active'
+  end
+
   def completion_percentage
-    total_fields = 8
+    total_fields = 7  # Removed status from completion calculation
     completed_fields = 0
     
     # Required fields
@@ -100,9 +130,6 @@ class Campaign < ApplicationRecord
     completed_fields += 1 if (brand_colors_array.any? || business.brand_colors_array.any?) &&
                             (brand_fonts.present? || business.brand_fonts.present?) &&
                             (tone_words_array.any? || business.tone_words_array.any?)
-    
-    # Status
-    completed_fields += 1 if status == 'active'
     
     (completed_fields.to_f / total_fields * 100).round
   end
@@ -124,7 +151,6 @@ class Campaign < ApplicationRecord
     brand_missing << "Tone Words" if tone_words_array.empty? && business.tone_words_array.empty?
     
     missing << "Brand Profile (#{brand_missing.join(', ')})" if brand_missing.any?
-    missing << "Campaign Status (must be Active)" if status != 'active'
     
     missing
   end

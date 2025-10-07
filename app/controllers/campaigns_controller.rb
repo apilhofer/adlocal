@@ -6,10 +6,10 @@ class CampaignsController < ApplicationController
   before_action :set_campaign, only: [:show, :edit, :update, :destroy, :generate_suggestions]
 
   def index
-    @campaigns = @business.campaigns.recent
+    @campaigns = @business.campaigns.by_status_priority
     
     # Filter by status if provided
-    if params[:status].present? && %w[draft active completed].include?(params[:status])
+    if params[:status].present? && %w[draft ready active completed].include?(params[:status])
       @campaigns = @campaigns.where(status: params[:status])
     end
   end

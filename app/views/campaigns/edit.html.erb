@@ -55,17 +55,39 @@
               </div>
               <div class="col-md-4 mb-3">
                 <label for="campaign_status" class="form-label fw-bold">Status</label>
+                <% 
+                  status_options = case @campaign.status
+                  when 'draft'
+                    [['Draft', 'draft']]
+                  when 'ready'
+                    [['Ready', 'ready'], ['Draft', 'draft']]
+                  when 'active'
+                    [['Active', 'active'], ['Ready', 'ready'], ['Completed', 'completed']]
+                  when 'completed'
+                    [['Completed', 'completed'], ['Active', 'active']]
+                  else
+                    [['Draft', 'draft']]
+                  end
+                %>
                 <%= f.select :status,
-                    options_for_select([
-                      ['Draft', 'draft'],
-                      ['Active', 'active'],
-                      ['Completed', 'completed']
-                    ], @campaign.status),
+                    options_for_select(status_options, @campaign.status),
                     {},
                     {
                       id: "campaign_status",
                       class: "form-control"
                     } %>
+                <div class="form-text">
+                  <% case @campaign.status %>
+                  <% when 'draft' %>
+                    Complete all information to generate ads and mark as ready.
+                  <% when 'ready' %>
+                    Campaign is ready to go live. Mark as active when ready to launch.
+                  <% when 'active' %>
+                    Campaign is currently running. Mark as completed when finished.
+                  <% when 'completed' %>
+                    Campaign has finished running.
+                  <% end %>
+                </div>
               </div>
             </div>
           </div>

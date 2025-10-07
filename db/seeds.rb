@@ -65,8 +65,24 @@ if business.campaigns.empty?
     ad_sizes: ["300x250", "728x90", "160x600", "300x600"]
   )
 
+  # Ready campaign (ads generated, ready to go live)
+  ready_campaign = business.campaigns.create!(
+    name: "Holiday Specials",
+    status: "ready",
+    brief: "Promote our holiday coffee blends and seasonal treats. Target customers looking for cozy winter beverages and gift options. Emphasize warmth, comfort, and holiday cheer.",
+    goals: "Increase holiday season sales by 40%, promote gift cards and holiday merchandise",
+    audience: "Coffee enthusiasts, gift shoppers, families celebrating holidays, office workers",
+    offer: "20% off holiday blends, free gift wrapping, buy 2 get 1 free on seasonal treats",
+    cta: "Get into the holiday spirit with our special blends!",
+    brand_colors: ["#8B4513", "#D2691E"],
+    brand_fonts: "Georgia, serif",
+    tone_words: ["cozy", "festive", "warm", "welcoming"],
+    ad_sizes: ["300x250", "728x90", "320x50"]
+  )
+
   puts "Created sample campaigns:"
   puts "- #{draft_campaign.name} (#{draft_campaign.status})"
+  puts "- #{ready_campaign.name} (#{ready_campaign.status})"
   puts "- #{active_campaign.name} (#{active_campaign.status})"
 end
 
