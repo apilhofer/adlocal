@@ -52,8 +52,8 @@ yarn-debug.log*
 npm-debug.log*
 .npm
 
-# Ignore package-lock.json (use yarn.lock instead)
-package-lock.json
+# Keep package-lock.json for npm users
+# package-lock.json
 
 # Ignore coverage directory used by tools like istanbul
 coverage/

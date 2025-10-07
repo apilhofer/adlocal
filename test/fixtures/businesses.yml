@@ -2,6 +2,7 @@
 
 one:
   name: Test Business One
+  type_of_business: Retail Store
   description: A wonderful test business that serves the community
   website: https://www.testbusinessone.com
   email: contact@testbusinessone.com
@@ -16,6 +17,7 @@ one:
 
 two:
   name: Test Business Two
+  type_of_business: Professional Services
   description: Another fantastic test business
   website: https://www.testbusinesstwo.com
   email: info@testbusinesstwo.com

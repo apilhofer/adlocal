@@ -5,6 +5,7 @@ class Business < ApplicationRecord
 
   # Essential business information
   validates :name, presence: true
+  validates :type_of_business, presence: true
   validates :description, length: { minimum: 10 }, allow_blank: true
   validates :address_1, presence: true
   validates :city, presence: true

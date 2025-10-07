@@ -8,6 +8,7 @@ end
 unless user.business
   biz = user.create_business!(
     name: "Sample Coffee Shop",
+    type_of_business: "Restaurant",
     description: "A cozy neighborhood coffee shop serving locally roasted beans and fresh pastries.",
     email: "info@samplecoffee.com",
     phone: "(312) 555-0123",

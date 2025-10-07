@@ -34,6 +34,7 @@ class BusinessesControllerTest < ActionDispatch::IntegrationTest
       post business_url, params: {
         business: {
           name: "New Test Business",
+          type_of_business: "Professional Services",
           description: "A test business description that is long enough",
           email: "newtest@example.com",
           phone: "(555) 111-2222",
@@ -60,11 +61,13 @@ class BusinessesControllerTest < ActionDispatch::IntegrationTest
   test "should update business" do
     patch business_url, params: {
       business: {
-        name: "Updated Business Name"
+        name: "Updated Business Name",
+        type_of_business: "Updated Business Type"
       }
     }
     assert_redirected_to business_url
     @business.reload
     assert_equal "Updated Business Name", @business.name
+    assert_equal "Updated Business Type", @business.type_of_business
   end
 end

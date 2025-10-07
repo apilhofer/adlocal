@@ -34,6 +34,20 @@
           </div>
 
           <div class="col-12 mb-3">
+            <label for="business_type_of_business" class="form-label">
+              Type of Business <span class="text-danger">*</span>
+            </label>
+            <%= f.text_field :type_of_business, 
+                id: "business_type_of_business",
+                class: "form-control #{'is-invalid' if @business.errors[:type_of_business].any?}",
+                placeholder: "e.g., Restaurant, Retail Store, Professional Services, etc.",
+                required: true %>
+            <% if @business.errors[:type_of_business].any? %>
+              <div class="invalid-feedback"><%= @business.errors[:type_of_business].first %></div>
+            <% end %>
+          </div>
+
+          <div class="col-12 mb-3">
             <label for="business_description" class="form-label">
               Business Description
             </label>
@@ -176,11 +190,56 @@
             <label for="business_country" class="form-label">
               Country <span class="text-danger">*</span>
             </label>
-            <%= f.text_field :country, 
-                id: "business_country",
-                class: "form-control #{'is-invalid' if @business.errors[:country].any?}",
-                placeholder: "United States",
-                required: true %>
+            <%= f.select :country, 
+                options_for_select([
+                  ['United States', 'United States'],
+                  ['Canada', 'Canada'],
+                  ['Mexico', 'Mexico'],
+                  ['United Kingdom', 'United Kingdom'],
+                  ['Germany', 'Germany'],
+                  ['France', 'France'],
+                  ['Italy', 'Italy'],
+                  ['Spain', 'Spain'],
+                  ['Netherlands', 'Netherlands'],
+                  ['Belgium', 'Belgium'],
+                  ['Switzerland', 'Switzerland'],
+                  ['Austria', 'Austria'],
+                  ['Sweden', 'Sweden'],
+                  ['Norway', 'Norway'],
+                  ['Denmark', 'Denmark'],
+                  ['Finland', 'Finland'],
+                  ['Ireland', 'Ireland'],
+                  ['Portugal', 'Portugal'],
+                  ['Poland', 'Poland'],
+                  ['Czech Republic', 'Czech Republic'],
+                  ['Hungary', 'Hungary'],
+                  ['Australia', 'Australia'],
+                  ['New Zealand', 'New Zealand'],
+                  ['Japan', 'Japan'],
+                  ['South Korea', 'South Korea'],
+                  ['China', 'China'],
+                  ['India', 'India'],
+                  ['Brazil', 'Brazil'],
+                  ['Argentina', 'Argentina'],
+                  ['Chile', 'Chile'],
+                  ['Colombia', 'Colombia'],
+                  ['Peru', 'Peru'],
+                  ['South Africa', 'South Africa'],
+                  ['Egypt', 'Egypt'],
+                  ['Nigeria', 'Nigeria'],
+                  ['Kenya', 'Kenya'],
+                  ['Israel', 'Israel'],
+                  ['Turkey', 'Turkey'],
+                  ['Russia', 'Russia'],
+                  ['Ukraine', 'Ukraine'],
+                  ['Other', 'Other']
+                ], @business.country || 'United States'),
+                { prompt: 'Select a country' },
+                { 
+                  id: "business_country",
+                  class: "form-control #{'is-invalid' if @business.errors[:country].any?}",
+                  required: true 
+                } %>
             <% if @business.errors[:country].any? %>
               <div class="invalid-feedback"><%= @business.errors[:country].first %></div>
             <% end %>

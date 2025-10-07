@@ -40,7 +40,7 @@ class BusinessesController < ApplicationController
 
   def business_params
     params.require(:business).permit(
-      :name, :description, :website, :email, :phone,
+      :name, :type_of_business, :description, :website, :email, :phone,
       :address_1, :address_2, :city, :state, :postal_code, :country,
       :logo,
       contact_people_attributes: [:id, :first_name, :last_name, :title, :email, :phone, :_destroy]
