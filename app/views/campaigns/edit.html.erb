@@ -9,9 +9,28 @@
         <h1 class="h3 mb-0 fw-bold">Edit Campaign</h1>
       </div>
 
-      <%= form_with model: @campaign, local: true, multipart: true, class: "needs-validation", novalidate: true do |f| %>
+      <%= form_with model: @campaign, local: true, multipart: true, class: "needs-validation", novalidate: true, data: { controller: "campaign-completion", business_has_brand_profile: @business.has_brand_profile? } do |f| %>
         
-        <%# Section 1: Campaign Basics %>
+        <%# Campaign Completion Progress %>
+        <div class="card mb-4 border-0 shadow-sm">
+          <div class="card-header bg-white border-bottom">
+            <h5 class="mb-0 fw-bold text-dark">
+              <i class="bi bi-check-circle text-primary me-2"></i>
+              Campaign Completion Progress
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <div class="progress flex-grow-1 me-3" style="height: 8px;">
+                <div class="progress-bar bg-primary" role="progressbar" style="width: <%= @campaign.completion_percentage %>%" data-campaign-completion-target="progressBar"></div>
+              </div>
+              <span class="badge bg-<%= @campaign.can_generate_ads? ? 'success' : 'secondary' %>" data-campaign-completion-target="percentage"><%= @campaign.completion_percentage %>%</span>
+            </div>
+            <p class="text-muted small mb-0">
+              Complete all sections below to enable ad generation. Required: Campaign Basics, Creative Brief, Goals, Audience, Offer, Call to Action, Ad Sizes, and Brand Profile.
+            </p>
+          </div>
+        </div>
         <div class="card mb-4 border-0 shadow-sm">
           <div class="card-header bg-white border-bottom">
             <h5 class="mb-0 fw-bold text-dark">

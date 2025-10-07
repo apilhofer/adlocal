@@ -141,9 +141,17 @@ class CampaignTest < ActiveSupport::TestCase
     assert_not @campaign.can_edit?
   end
 
-  test "can_generate_ads? should return true for active campaigns with valid brief" do
+  test "can_generate_ads? should return true for complete active campaigns" do
     @campaign.status = "active"
     @campaign.brief = "This is a valid brief with enough content"
+    @campaign.goals = "Test goals"
+    @campaign.audience = "Test audience"
+    @campaign.offer = "Test offer"
+    @campaign.cta = "Test CTA"
+    @campaign.ad_sizes = ["300x250"]
+    @campaign.brand_colors = ["#FF0000"]
+    @campaign.brand_fonts = "Arial"
+    @campaign.tone_words = ["bold"]
     assert @campaign.can_generate_ads?
     
     @campaign.status = "draft"
@@ -151,6 +159,13 @@ class CampaignTest < ActiveSupport::TestCase
     
     @campaign.status = "active"
     @campaign.brief = "Short"
+    assert_not @campaign.can_generate_ads?
+  end
+
+  test "can_generate_ads? should return false for incomplete campaigns" do
+    @campaign.status = "active"
+    @campaign.brief = "This is a valid brief with enough content"
+    # Missing other required fields
     assert_not @campaign.can_generate_ads?
   end
 

@@ -75,6 +75,15 @@
                     <%= pluralize(campaign.ad_sizes_array.length, 'ad size') %> selected
                   </p>
                 <% end %>
+
+                <!-- Completion Status -->
+                <div class="d-flex align-items-center mb-2">
+                  <i class="bi bi-check-circle text-muted me-1"></i>
+                  <span class="text-muted small">Completion: </span>
+                  <span class="badge bg-<%= campaign.can_generate_ads? ? 'success' : 'warning' %> ms-1">
+                    <%= campaign.completion_percentage %>%
+                  </span>
+                </div>
               </div>
 
               <%# Campaign Actions %>
@@ -88,6 +97,8 @@
                   
                   <% if campaign.can_generate_ads? %>
                     <%= link_to "Generate Ads", "#", class: "btn btn-primary btn-sm flex-fill" %>
+                  <% else %>
+                    <%= link_to "Complete", edit_campaign_path(campaign), class: "btn btn-warning btn-sm flex-fill" %>
                   <% end %>
                 </div>
               </div>
