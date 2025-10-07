@@ -23,6 +23,12 @@ unless user.business
     brand_fonts: "Georgia, serif",
     tone_words: ["cozy", "welcoming", "artisanal", "local"]
   )
+  
+  # Attach a sample logo
+  logo_path = Rails.root.join('test', 'fixtures', 'files', 'test_logo.png')
+  if File.exist?(logo_path)
+    biz.logo.attach(io: File.open(logo_path), filename: 'sample_logo.png', content_type: 'image/png')
+  end
   biz.contact_people.create!(
     first_name: "Alex",
     last_name: "Ng",

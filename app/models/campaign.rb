@@ -7,8 +7,18 @@ class Campaign < ApplicationRecord
   # Validations
   validates :name, presence: true, length: { maximum: 100 }
   validates :business, presence: true
-  validates :brief, length: { minimum: 20 }, allow_blank: true
+  validates :brief, presence: true, length: { minimum: 20 }
+  validates :goals, presence: true
+  validates :audience, presence: true
+  validates :offer, presence: true
+  validates :ad_sizes, presence: true, on: :update
   validates :status, inclusion: { in: %w[draft ready active completed] }
+  
+  # Custom validation for ad_sizes
+  validate :at_least_one_ad_size, on: :update
+
+  # Callbacks
+  before_create :set_default_ad_sizes
 
   # JSON fields
   serialize :brand_colors, coder: JSON
@@ -159,5 +169,19 @@ class Campaign < ApplicationRecord
     missing << "Brand Profile (#{brand_missing.join(', ')})" if brand_missing.any?
     
     missing
+  end
+
+  private
+
+  def set_default_ad_sizes
+    if ad_sizes_array.empty?
+      self.ad_sizes = ["300x250", "728x90", "160x600", "300x600", "320x50"]
+    end
+  end
+
+  def at_least_one_ad_size
+    if ad_sizes_array.empty?
+      errors.add(:ad_sizes, "must select at least one ad size")
+    end
   end
 end

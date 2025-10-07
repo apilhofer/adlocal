@@ -41,12 +41,42 @@ class BusinessesController < ApplicationController
   end
 
   def business_params
-    params.require(:business).permit(
+    permitted_params = params.require(:business).permit(
       :name, :type_of_business, :description, :website, :email, :phone,
       :address_1, :address_2, :city, :state, :postal_code, :country,
-      :logo, :brand_fonts,
-      brand_colors: [], tone_words: [],
+      :logo, :brand_fonts, :brand_colors, :tone_words,
       contact_people_attributes: [ :id, :first_name, :last_name, :title, :email, :phone, :_destroy ]
     )
+    
+    # Handle brand_colors - can be array or comma-separated string
+    if permitted_params[:brand_colors].present?
+      if permitted_params[:brand_colors].is_a?(String)
+        permitted_params[:brand_colors] = permitted_params[:brand_colors].split(',').map(&:strip).reject(&:blank?)
+      elsif permitted_params[:brand_colors].is_a?(Array)
+        # Already an array, keep as is
+      end
+    else
+      permitted_params[:brand_colors] = []
+    end
+    
+    # Handle tone_words - can be array or comma-separated string
+    if permitted_params[:tone_words].present?
+      if permitted_params[:tone_words].is_a?(String)
+        permitted_params[:tone_words] = permitted_params[:tone_words].split(',').map(&:strip).reject(&:blank?)
+      elsif permitted_params[:tone_words].is_a?(Array)
+        # Already an array, keep as is
+      end
+    else
+      permitted_params[:tone_words] = []
+    end
+    
+    # Handle empty brand_fonts string
+    if permitted_params[:brand_fonts].present? && permitted_params[:brand_fonts].strip.blank?
+      permitted_params[:brand_fonts] = nil
+    elsif permitted_params[:brand_fonts].blank?
+      permitted_params[:brand_fonts] = nil
+    end
+    
+    permitted_params
   end
 end

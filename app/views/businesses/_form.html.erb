@@ -101,12 +101,27 @@
           </div>
 
           <div class="col-md-6 mb-3">
-            <label for="business_logo" class="form-label">Logo</label>
+            <label for="business_logo" class="form-label">
+              Logo <% unless @business.persisted? && @business.logo.attached? %><span class="text-danger">*</span><% end %>
+            </label>
             <%= f.file_field :logo, 
                 id: "business_logo",
-                class: "form-control" %>
+                class: "form-control #{'is-invalid' if @business.errors[:logo].any?}",
+                required: !(@business.persisted? && @business.logo.attached?),
+                accept: "image/*" %>
+            <% if @business.errors[:logo].any? %>
+              <div class="invalid-feedback"><%= @business.errors[:logo].first %></div>
+            <% end %>
+            <div class="form-text">
+              <% if @business.persisted? && @business.logo.attached? %>
+                Upload a new logo to replace the current one (PNG, JPG, or SVG)
+              <% else %>
+                Upload your business logo (PNG, JPG, or SVG)
+              <% end %>
+            </div>
             <% if @business.logo.attached? %>
               <div class="mt-3">
+                <p class="text-muted small mb-2">Current logo:</p>
                 <%= image_tag @business.logo.variant(resize_to_limit: [200, 200]), class: "img-thumbnail" %>
               </div>
             <% end %>

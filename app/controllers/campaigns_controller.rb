@@ -70,7 +70,7 @@ class CampaignsController < ApplicationController
   end
 
   def generate_suggestions
-    if @campaign.brief.blank?
+    if @campaign.brief.blank? || @campaign.brief.length < 20
       render json: { error: 'Brief is required for AI suggestions' }, status: :unprocessable_entity
       return
     end

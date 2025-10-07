@@ -96,3 +96,29 @@ footer h5 {
 footer ul li {
   line-height: 1.6;
 }
+
+/* Light grey placeholder text for all form inputs */
+.form-control::placeholder {
+  color: #c0c0c0 !important;
+  opacity: 1;
+}
+
+.form-control::-webkit-input-placeholder {
+  color: #c0c0c0 !important;
+  opacity: 1;
+}
+
+.form-control::-moz-placeholder {
+  color: #c0c0c0 !important;
+  opacity: 1;
+}
+
+.form-control:-ms-input-placeholder {
+  color: #c0c0c0 !important;
+  opacity: 1;
+}
+
+.form-control:-moz-placeholder {
+  color: #c0c0c0 !important;
+  opacity: 1;
+}

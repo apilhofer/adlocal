@@ -18,6 +18,9 @@ class BusinessTest < ActiveSupport::TestCase
       country: 'Test Country',
       user: @user
     )
+        # Attach a test logo
+        logo_file = fixture_file_upload('test_logo.png', 'image/png')
+        @business.logo.attach(logo_file)
   end
 
   test 'should be valid' do
@@ -79,6 +82,25 @@ class BusinessTest < ActiveSupport::TestCase
     assert_not @business.valid?
   end
 
+  test 'logo should be present' do
+    # Create a business without a logo
+    business_without_logo = Business.new(
+      name: 'Test Business',
+      type_of_business: 'Retail Store',
+      description: 'A test business description',
+      email: 'test@example.com',
+      phone: '(555) 123-4567',
+      address_1: '123 Test St',
+      city: 'Test City',
+      state: 'TS',
+      postal_code: '12345',
+      country: 'Test Country',
+      user: @user
+    )
+    assert_not business_without_logo.valid?
+    assert_includes business_without_logo.errors[:logo], "can't be blank"
+  end
+
   test 'description should be at least 10 characters when present' do
     @business.description = 'short'
     assert_not @business.valid?
@@ -109,5 +131,53 @@ class BusinessTest < ActiveSupport::TestCase
 
   test 'should have one attached logo' do
     assert_respond_to @business, :logo
+  end
+
+  test 'brand_colors_array should return empty array when brand_colors is nil' do
+    @business.brand_colors = nil
+    assert_equal [], @business.brand_colors_array
+  end
+
+  test 'brand_colors_array should return array when brand_colors is set' do
+    @business.brand_colors = ['#FF0000', '#00FF00']
+    assert_equal ['#FF0000', '#00FF00'], @business.brand_colors_array
+  end
+
+  test 'tone_words_array should return empty array when tone_words is nil' do
+    @business.tone_words = nil
+    assert_equal [], @business.tone_words_array
+  end
+
+  test 'tone_words_array should return array when tone_words is set' do
+    @business.tone_words = ['professional', 'modern']
+    assert_equal ['professional', 'modern'], @business.tone_words_array
+  end
+
+  test 'has_brand_profile? should return false when no brand profile is set' do
+    @business.brand_colors = nil
+    @business.brand_fonts = nil
+    @business.tone_words = nil
+    assert_not @business.has_brand_profile?
+  end
+
+  test 'has_brand_profile? should return true when brand_colors is set' do
+    @business.brand_colors = ['#FF0000']
+    @business.brand_fonts = nil
+    @business.tone_words = nil
+    assert @business.has_brand_profile?
+  end
+
+  test 'has_brand_profile? should return true when brand_fonts is set' do
+    @business.brand_colors = nil
+    @business.brand_fonts = 'Arial, sans-serif'
+    @business.tone_words = nil
+    assert @business.has_brand_profile?
+  end
+
+  test 'has_brand_profile? should return true when tone_words is set' do
+    @business.brand_colors = nil
+    @business.brand_fonts = nil
+    @business.tone_words = ['professional']
+    assert @business.has_brand_profile?
   end
 end

@@ -54,8 +54,11 @@ class CampaignsControllerTest < ActionDispatch::IntegrationTest
         campaign: {
           name: "Campaign with Defaults",
           brief: "This is a test campaign brief with enough content to pass validation",
+          goals: "Test goals",
+          audience: "Test audience",
+          offer: "Test offer",
           status: "draft"
-          # No brand profile fields provided - should inherit from business
+          # No ad_sizes or brand profile fields provided - should get defaults
         }
       }
     end
@@ -64,6 +67,9 @@ class CampaignsControllerTest < ActionDispatch::IntegrationTest
     assert_equal ["#FF0000", "#00FF00"], campaign.brand_colors_array
     assert_equal "Arial, sans-serif", campaign.brand_fonts
     assert_equal ["bold", "modern"], campaign.tone_words_array
+    # Should have default ad sizes
+    expected_sizes = ["300x250", "728x90", "160x600", "300x600", "320x50"]
+    assert_equal expected_sizes, campaign.ad_sizes_array
   end
 
   test "should create campaign with overridden brand profile" do
@@ -79,6 +85,10 @@ class CampaignsControllerTest < ActionDispatch::IntegrationTest
         campaign: {
           name: "Campaign with Overrides",
           brief: "This is a test campaign brief with enough content to pass validation",
+          goals: "Test goals",
+          audience: "Test audience",
+          offer: "Test offer",
+          ad_sizes: ["300x250"],
           status: "draft",
           brand_colors: ["#0000FF"],
           brand_fonts: "Times, serif",
@@ -106,6 +116,10 @@ class CampaignsControllerTest < ActionDispatch::IntegrationTest
         campaign: {
           name: "Campaign with Partial Overrides",
           brief: "This is a test campaign brief with enough content to pass validation",
+          goals: "Test goals",
+          audience: "Test audience",
+          offer: "Test offer",
+          ad_sizes: ["300x250"],
           status: "draft",
           brand_colors: ["#0000FF"]  # Only override colors, fonts and tone should inherit
         }
@@ -188,9 +202,21 @@ class CampaignsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not generate suggestions without brief" do
-    @campaign.update!(brief: "")
+    # Create a campaign with a valid brief first
+    campaign = @business.campaigns.create!(
+      name: "Test Campaign",
+      brief: "This is a valid brief with enough content to pass validation",
+      goals: "Test goals",
+      audience: "Test audience", 
+      offer: "Test offer",
+      ad_sizes: ["300x250"],
+      status: "draft"
+    )
     
-    post generate_suggestions_campaign_url(@campaign)
+    # Manually set a short brief to bypass validation for this test
+    campaign.update_column(:brief, "Short")
+    
+    post generate_suggestions_campaign_url(campaign)
     assert_response :unprocessable_entity
     
     response_body = JSON.parse(response.body)

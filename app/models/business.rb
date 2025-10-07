@@ -18,6 +18,7 @@ class Business < ApplicationRecord
   validates :city, presence: true
   validates :state, presence: true
   validates :postal_code, presence: true
+  validates :logo, presence: true, on: :create
   validates :country, presence: true
 
   # Contact information

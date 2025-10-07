@@ -9,6 +9,10 @@ class CampaignTest < ActiveSupport::TestCase
     @campaign = @business.campaigns.build(
       name: "Test Campaign",
       brief: "This is a test campaign brief with enough content to pass validation",
+      goals: "Test goals for the campaign",
+      audience: "Test target audience",
+      offer: "Test offer details",
+      ad_sizes: ["300x250"],
       status: "draft"
     )
   end
@@ -40,12 +44,70 @@ class CampaignTest < ActiveSupport::TestCase
     assert @campaign.valid?
   end
 
-  test "brief can be blank" do
+  test "brief should be present" do
     @campaign.brief = nil
-    assert @campaign.valid?
+    assert_not @campaign.valid?
     
     @campaign.brief = ""
+    assert_not @campaign.valid?
+  end
+
+  test "goals should be present" do
+    @campaign.goals = nil
+    assert_not @campaign.valid?
+    
+    @campaign.goals = ""
+    assert_not @campaign.valid?
+  end
+
+  test "audience should be present" do
+    @campaign.audience = nil
+    assert_not @campaign.valid?
+    
+    @campaign.audience = ""
+    assert_not @campaign.valid?
+  end
+
+  test "offer should be present" do
+    @campaign.offer = nil
+    assert_not @campaign.valid?
+    
+    @campaign.offer = ""
+    assert_not @campaign.valid?
+  end
+
+  test "ad_sizes should be present on update" do
+    @campaign.save!
+    @campaign.ad_sizes = nil
+    assert_not @campaign.valid?
+    
+    @campaign.ad_sizes = []
+    assert_not @campaign.valid?
+  end
+
+  test "ad_sizes should have at least one size on update" do
+    @campaign.save!
+    @campaign.ad_sizes = []
+    assert_not @campaign.valid?
+    assert_includes @campaign.errors[:ad_sizes], "must select at least one ad size"
+    
+    @campaign.ad_sizes = ["300x250"]
     assert @campaign.valid?
+  end
+
+  test "should set default ad sizes for new campaigns" do
+    campaign = @business.campaigns.create!(
+      name: "New Campaign",
+      brief: "This is a test campaign brief with enough content to pass validation",
+      goals: "Test goals",
+      audience: "Test audience",
+      offer: "Test offer",
+      status: "draft"
+      # No ad_sizes specified - should get defaults
+    )
+    
+    expected_sizes = ["300x250", "728x90", "160x600", "300x600", "320x50"]
+    assert_equal expected_sizes, campaign.ad_sizes_array
   end
 
   test "status should be valid" do
