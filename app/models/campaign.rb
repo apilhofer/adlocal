@@ -115,8 +115,14 @@ class Campaign < ApplicationRecord
   end
 
   def completion_percentage
-    total_fields = 7  # Removed status from completion calculation
+    total_fields = 9
     completed_fields = 0
+    
+    # Campaign name
+    completed_fields += 1 if name.present?
+    
+    # Status (always complete - defaults to draft)
+    completed_fields += 1
     
     # Required fields
     completed_fields += 1 if brief.present? && brief.length >= 20

@@ -34,7 +34,7 @@ export default class extends Controller {
 
   calculateCompletion() {
     let completedFields = 0
-    const totalFields = 8
+    const totalFields = 9
 
     // Campaign name
     if (this.getFieldValue("campaign_name").trim() !== "") {
@@ -79,7 +79,7 @@ export default class extends Controller {
     const hasBrandColors = this.getFieldValue("brand_colors").trim() !== "" || this.businessHasBrandProfileValue
     const hasBrandFonts = this.getFieldValue("brand_fonts").trim() !== "" || this.businessHasBrandProfileValue
     const hasToneWords = this.getFieldValue("tone_words").trim() !== "" || this.businessHasBrandProfileValue
-    
+
     if (hasBrandColors && hasBrandFonts && hasToneWords) {
       completedFields++
     }
