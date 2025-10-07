@@ -49,13 +49,13 @@ class Campaign < ApplicationRecord
   def status_badge_class
     case status
     when 'draft'
-      'bg-gray-100 text-gray-800'
+      'badge bg-secondary'
     when 'active'
-      'bg-green-100 text-green-800'
+      'badge bg-success'
     when 'completed'
-      'bg-blue-100 text-blue-800'
+      'badge bg-primary'
     else
-      'bg-gray-100 text-gray-800'
+      'badge bg-secondary'
     end
   end
 

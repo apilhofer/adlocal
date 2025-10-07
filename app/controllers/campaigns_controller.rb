@@ -7,6 +7,11 @@ class CampaignsController < ApplicationController
 
   def index
     @campaigns = @business.campaigns.recent
+    
+    # Filter by status if provided
+    if params[:status].present? && %w[draft active completed].include?(params[:status])
+      @campaigns = @campaigns.where(status: params[:status])
+    end
   end
 
   def show
