@@ -247,6 +247,44 @@
         </div>
       </div>
 
+      <!-- Brand Profile Section -->
+      <div class="border-bottom pb-4 mb-4">
+        <h2 class="h4 fw-semibold mb-4 d-flex align-items-center">
+          <i class="bi bi-palette text-primary me-2"></i>
+          Brand Profile
+        </h2>
+        <p class="text-muted mb-4">Set your brand colors, fonts, and tone to help create consistent advertising campaigns.</p>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="business_brand_colors" class="form-label fw-bold">Brand Colors</label>
+            <p class="text-muted small mb-2">Enter hex color codes (e.g., #dc3545, #ffffff)</p>
+            <%= f.text_field :brand_colors,
+                id: "business_brand_colors",
+                class: "form-control",
+                placeholder: "#dc3545, #ffffff, #000000",
+                value: @business.brand_colors_array.join(", ") %>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="business_brand_fonts" class="form-label fw-bold">Brand Fonts</label>
+            <p class="text-muted small mb-2">Preferred font families</p>
+            <%= f.text_field :brand_fonts,
+                id: "business_brand_fonts",
+                class: "form-control",
+                placeholder: "e.g., Arial, Helvetica, sans-serif" %>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="business_tone_words" class="form-label fw-bold">Tone Words</label>
+          <p class="text-muted small mb-2">Describe your brand personality</p>
+          <%= f.text_field :tone_words,
+              id: "business_tone_words",
+              class: "form-control",
+              placeholder: "professional, friendly, modern, trustworthy",
+              value: @business.tone_words_array.join(", ") %>
+        </div>
+      </div>
+
       <!-- Contact Person Section -->
       <div class="mb-4">
         <h2 class="h4 fw-semibold mb-4 d-flex align-items-center">

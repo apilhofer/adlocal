@@ -108,7 +108,7 @@
           <div class="d-flex gap-2">
             <% if user_signed_in? %>
               <%= link_to "Dashboard", business_path, class: "btn btn-primary btn-sm" %>
-              <%= link_to "Campaigns", "#", class: "btn btn-primary btn-sm" %>
+              <%= link_to "Campaigns", campaigns_path, class: "btn btn-primary btn-sm" %>
               <%= link_to "Sign Out", destroy_user_session_path, data: { "turbo-method": "delete" }, class: "btn btn-outline-secondary btn-sm" %>
             <% end %>
           </div>

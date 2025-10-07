@@ -17,6 +17,14 @@ Rails.application.routes.draw do
     resources :contact_people, except: [:show]
   end
 
+  # Campaign routes
+  resources :campaigns do
+    member do
+      post :generate_suggestions  # AI brief suggestions
+    end
+    resources :assets, only: [:create, :destroy]  # inspiration image management
+  end
+
   # Defines the root path route ("/")
   root "home#index"
 end

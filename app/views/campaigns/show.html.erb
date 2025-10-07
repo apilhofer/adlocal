@@ -1,0 +1,243 @@
+<%# Campaign Show Page %>
+<div class="container py-5">
+  <div class="row">
+    <div class="col-lg-8">
+      <%# Campaign Header %>
+      <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+          <h1 class="display-5 fw-bold text-dark mb-2"><%= @campaign.name %></h1>
+          <div class="d-flex align-items-center gap-3">
+            <span class="badge <%= @campaign.status_badge_class %> px-3 py-2 fs-6">
+              <%= @campaign.status.titleize %>
+            </span>
+            <span class="text-muted">
+              <i class="bi bi-calendar3 me-1"></i>
+              Created <%= time_ago_in_words(@campaign.created_at) %> ago
+            </span>
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          <% if @campaign.can_edit? %>
+            <%= link_to "Edit", edit_campaign_path(@campaign), class: "btn btn-outline-primary" %>
+          <% end %>
+          <% if @campaign.can_generate_ads? %>
+            <%= link_to "Generate Ads", "#", class: "btn btn-primary" %>
+          <% end %>
+        </div>
+      </div>
+
+      <%# Campaign Brief %>
+      <% if @campaign.brief.present? %>
+        <div class="card mb-4 border-0 shadow-sm">
+          <div class="card-header bg-white border-bottom">
+            <h5 class="mb-0 fw-bold text-dark">
+              <i class="bi bi-file-text text-primary me-2"></i>
+              Campaign Brief
+            </h5>
+          </div>
+          <div class="card-body">
+            <p class="mb-0 fs-5"><%= simple_format(@campaign.brief) %></p>
+          </div>
+        </div>
+      <% end %>
+
+      <%# Campaign Details %>
+      <div class="row">
+        <% if @campaign.goals.present? %>
+          <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-header bg-white border-bottom">
+                <h6 class="mb-0 fw-bold text-dark">
+                  <i class="bi bi-bullseye text-primary me-2"></i>
+                  Goals
+                </h6>
+              </div>
+              <div class="card-body">
+                <p class="mb-0"><%= simple_format(@campaign.goals) %></p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <% if @campaign.audience.present? %>
+          <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-header bg-white border-bottom">
+                <h6 class="mb-0 fw-bold text-dark">
+                  <i class="bi bi-people text-primary me-2"></i>
+                  Target Audience
+                </h6>
+              </div>
+              <div class="card-body">
+                <p class="mb-0"><%= simple_format(@campaign.audience) %></p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <% if @campaign.offer.present? %>
+          <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-header bg-white border-bottom">
+                <h6 class="mb-0 fw-bold text-dark">
+                  <i class="bi bi-gift text-primary me-2"></i>
+                  Offer Details
+                </h6>
+              </div>
+              <div class="card-body">
+                <p class="mb-0"><%= simple_format(@campaign.offer) %></p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <% if @campaign.cta.present? %>
+          <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-header bg-white border-bottom">
+                <h6 class="mb-0 fw-bold text-dark">
+                  <i class="bi bi-cursor text-primary me-2"></i>
+                  Call to Action
+                </h6>
+              </div>
+              <div class="card-body">
+                <p class="mb-0 fw-bold fs-5"><%= @campaign.cta %></p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <%# Brand Profile %>
+      <% if @campaign.brand_colors_array.any? || @campaign.brand_fonts.present? || @campaign.tone_words_array.any? %>
+        <div class="card mb-4 border-0 shadow-sm">
+          <div class="card-header bg-white border-bottom">
+            <h5 class="mb-0 fw-bold text-dark">
+              <i class="bi bi-palette text-primary me-2"></i>
+              Brand Profile
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <% if @campaign.brand_colors_array.any? %>
+                <div class="col-md-4 mb-3">
+                  <h6 class="fw-bold mb-2">Brand Colors</h6>
+                  <div class="d-flex flex-wrap gap-2">
+                    <% @campaign.brand_colors_array.each do |color| %>
+                      <div class="d-flex align-items-center">
+                        <div class="me-2" style="width: 20px; height: 20px; background-color: <%= color %>; border-radius: 3px; border: 1px solid #ddd;"></div>
+                        <span class="small text-muted"><%= color %></span>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+
+              <% if @campaign.brand_fonts.present? %>
+                <div class="col-md-4 mb-3">
+                  <h6 class="fw-bold mb-2">Brand Fonts</h6>
+                  <p class="mb-0 text-muted"><%= @campaign.brand_fonts %></p>
+                </div>
+              <% end %>
+
+              <% if @campaign.tone_words_array.any? %>
+                <div class="col-md-4 mb-3">
+                  <h6 class="fw-bold mb-2">Tone Words</h6>
+                  <div class="d-flex flex-wrap gap-1">
+                    <% @campaign.tone_words_array.each do |word| %>
+                      <span class="badge bg-light text-dark border"><%= word %></span>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <%# Ad Sizes %>
+      <% if @campaign.ad_sizes_array.any? %>
+        <div class="card mb-4 border-0 shadow-sm">
+          <div class="card-header bg-white border-bottom">
+            <h5 class="mb-0 fw-bold text-dark">
+              <i class="bi bi-aspect-ratio text-primary me-2"></i>
+              Selected Ad Sizes
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <% @campaign.ad_sizes_array.each do |size| %>
+                <div class="col-md-6 mb-2">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-check-circle text-success me-2"></i>
+                    <span class="fw-bold"><%= size %></span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Sidebar %>
+    <div class="col-lg-4">
+      <%# Assets %>
+      <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom">
+          <h5 class="mb-0 fw-bold text-dark">
+            <i class="bi bi-image text-primary me-2"></i>
+            Assets
+          </h5>
+        </div>
+        <div class="card-body">
+          <%# Business Logo %>
+          <% if @campaign.business_logo %>
+            <div class="mb-4">
+              <h6 class="fw-bold mb-2">Business Logo</h6>
+              <%= image_tag @campaign.business_logo, class: "img-thumbnail", style: "width: 100px; height: 100px; object-fit: contain;" %>
+            </div>
+          <% end %>
+
+          <%# Inspiration Images %>
+          <% if @campaign.has_inspiration_images? %>
+            <div>
+              <h6 class="fw-bold mb-3">Inspiration Images</h6>
+              <div class="row g-2">
+                <% @campaign.inspiration_images.each do |image| %>
+                  <div class="col-6">
+                    <%= image_tag image, class: "img-thumbnail w-100", style: "height: 100px; object-fit: cover;" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">No inspiration images uploaded</p>
+          <% end %>
+        </div>
+      </div>
+
+      <%# Campaign Stats %>
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom">
+          <h5 class="mb-0 fw-bold text-dark">
+            <i class="bi bi-graph-up text-primary me-2"></i>
+            Campaign Stats
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row text-center">
+            <div class="col-6 mb-3">
+              <h4 class="text-primary fw-bold mb-1"><%= @campaign.ad_sizes_array.length %></h4>
+              <p class="text-muted small mb-0">Ad Sizes</p>
+            </div>
+            <div class="col-6 mb-3">
+              <h4 class="text-success fw-bold mb-1"><%= @campaign.inspiration_images_count %></h4>
+              <p class="text-muted small mb-0">Images</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

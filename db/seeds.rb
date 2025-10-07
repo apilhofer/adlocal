@@ -18,7 +18,10 @@ unless user.business
     state: "IL",
     postal_code: "60601",
     country: "United States",
-    website: "https://www.samplecoffee.com"
+    website: "https://www.samplecoffee.com",
+    brand_colors: ["#8B4513", "#D2691E", "#F4A460"],
+    brand_fonts: "Georgia, serif",
+    tone_words: ["cozy", "welcoming", "artisanal", "local"]
   )
   biz.contact_people.create!(
     first_name: "Alex",
@@ -27,6 +30,44 @@ unless user.business
     email: "alex@samplecoffee.com",
     phone: "(312) 555-0124"
   )
+end
+
+# Create sample campaigns
+business = user.business
+if business.campaigns.empty?
+  # Draft campaign with inspiration images
+  draft_campaign = business.campaigns.create!(
+    name: "Summer Coffee Specials",
+    status: "draft",
+    brief: "Promote our new summer iced coffee drinks and cold brew selection. Target coffee lovers looking for refreshing options during hot weather. Emphasize locally sourced ingredients and artisanal preparation methods.",
+    goals: "Increase summer beverage sales by 30% and attract new customers during the hot season",
+    audience: "Coffee enthusiasts aged 25-45 who appreciate quality and local sourcing",
+    offer: "20% off all iced coffee drinks and free cold brew samples",
+    cta: "Visit us today for a refreshing coffee experience",
+    brand_colors: ["#8B4513", "#D2691E"],
+    brand_fonts: "Georgia, serif",
+    tone_words: ["refreshing", "artisanal", "local"],
+    ad_sizes: ["300x250", "728x90", "320x50"]
+  )
+
+  # Active campaign with full brief
+  active_campaign = business.campaigns.create!(
+    name: "Grand Opening Celebration",
+    status: "active",
+    brief: "Announce our grand opening with special promotions and community events. Create excitement around our new location and build relationships with local residents. Focus on community engagement and establishing ourselves as the neighborhood coffee destination.",
+    goals: "Generate buzz for grand opening, attract 200+ visitors on opening day, establish community presence",
+    audience: "Local residents, coffee lovers, families, remote workers, and community members",
+    offer: "Free coffee for first 100 customers, 50% off all drinks for opening week, free pastries with purchase",
+    cta: "Join us for our grand opening celebration this Saturday!",
+    brand_colors: ["#8B4513", "#D2691E", "#F4A460"],
+    brand_fonts: "Georgia, serif",
+    tone_words: ["celebratory", "community", "welcoming", "exciting"],
+    ad_sizes: ["300x250", "728x90", "160x600", "300x600"]
+  )
+
+  puts "Created sample campaigns:"
+  puts "- #{draft_campaign.name} (#{draft_campaign.status})"
+  puts "- #{active_campaign.name} (#{active_campaign.status})"
 end
 
 # This file should ensure the existence of records required to run the application in every environment (production,

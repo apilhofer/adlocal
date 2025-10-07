@@ -1,0 +1,33 @@
+# frozen_string_literal: true
+
+one:
+  name: Summer Coffee Specials
+  business: one
+  brief: Promote our new summer iced coffee drinks and cold brew selection. Target coffee lovers looking for refreshing options during hot weather.
+  goals: Increase summer beverage sales by 30% and attract new customers during the hot season
+  audience: Coffee enthusiasts aged 25-45 who appreciate quality and local sourcing
+  offer: 20% off all iced coffee drinks and free cold brew samples
+  cta: Visit us today for a refreshing coffee experience
+  brand_colors: '["#8B4513", "#D2691E"]'
+  brand_fonts: Georgia, serif
+  tone_words: '["refreshing", "artisanal", "local"]'
+  status: draft
+  ad_sizes: '["300x250", "728x90", "320x50"]'
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.week.ago %>
+
+two:
+  name: Grand Opening Celebration
+  business: two
+  brief: Announce our grand opening with special promotions and community events. Create excitement around our new location and build relationships with local residents.
+  goals: Generate buzz for grand opening, attract 200+ visitors on opening day, establish community presence
+  audience: Local residents, coffee lovers, families, remote workers, and community members
+  offer: Free coffee for first 100 customers, 50% off all drinks for opening week, free pastries with purchase
+  cta: Join us for our grand opening celebration this Saturday!
+  brand_colors: '["#8B4513", "#D2691E", "#F4A460"]'
+  brand_fonts: Georgia, serif
+  tone_words: '["celebratory", "community", "welcoming", "exciting"]'
+  status: active
+  ad_sizes: '["300x250", "728x90", "160x600", "300x600"]'
+  created_at: <%= 2.days.ago %>
+  updated_at: <%= 1.day.ago %>

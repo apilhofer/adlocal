@@ -44,7 +44,8 @@ class BusinessesController < ApplicationController
     params.require(:business).permit(
       :name, :type_of_business, :description, :website, :email, :phone,
       :address_1, :address_2, :city, :state, :postal_code, :country,
-      :logo,
+      :logo, :brand_fonts,
+      brand_colors: [], tone_words: [],
       contact_people_attributes: [ :id, :first_name, :last_name, :title, :email, :phone, :_destroy ]
     )
   end

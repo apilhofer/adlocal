@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_07_150134) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_07_181509) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -58,7 +58,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_07_150134) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "type_of_business"
+    t.text "brand_colors"
+    t.string "brand_fonts"
+    t.text "tone_words"
     t.index ["user_id"], name: "index_businesses_on_user_id"
+  end
+
+  create_table "campaigns", force: :cascade do |t|
+    t.string "name", null: false
+    t.bigint "business_id", null: false
+    t.text "brief"
+    t.text "goals"
+    t.text "audience"
+    t.text "offer"
+    t.string "cta"
+    t.text "brand_colors"
+    t.string "brand_fonts"
+    t.text "tone_words"
+    t.string "status", default: "draft", null: false
+    t.text "ad_sizes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["business_id"], name: "index_campaigns_on_business_id"
+    t.index ["status"], name: "index_campaigns_on_status"
   end
 
   create_table "contact_people", force: :cascade do |t|
@@ -88,5 +110,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_07_150134) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "businesses", "users"
+  add_foreign_key "campaigns", "businesses"
   add_foreign_key "contact_people", "businesses"
 end

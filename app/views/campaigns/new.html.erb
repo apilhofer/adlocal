@@ -1,0 +1,338 @@
+<%# New Campaign Form %>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="d-flex align-items-center mb-4">
+        <%= link_to campaigns_path, class: "btn btn-outline-secondary me-3" do %>
+          <i class="bi bi-arrow-left"></i> Back to Campaigns
+        <% end %>
+        <h1 class="h3 mb-0 fw-bold">Create New Campaign</h1>
+      </div>
+
+      <%= form_with model: @campaign, local: true, multipart: true, class: "needs-validation", novalidate: true do |f| %>
+        
+        <%# Section 1: Campaign Basics %>
+        <div class="card mb-4 border-0 shadow-sm">
+          <div class="card-header bg-white border-bottom">
+            <h5 class="mb-0 fw-bold text-dark">
+              <i class="bi bi-info-circle text-primary me-2"></i>
+              Campaign Basics
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-8 mb-3">
+                <label for="campaign_name" class="form-label fw-bold">
+                  Campaign Name <span class="text-danger">*</span>
+                </label>
+                <%= f.text_field :name,
+                    id: "campaign_name",
+                    class: "form-control #{'is-invalid' if @campaign.errors[:name].any?}",
+                    placeholder: "e.g., Summer Sale 2025, Grand Opening Campaign",
+                    required: true %>
+                <% if @campaign.errors[:name].any? %>
+                  <div class="invalid-feedback"><%= @campaign.errors[:name].first %></div>
+                <% end %>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="campaign_status" class="form-label fw-bold">Status</label>
+                <%= f.select :status,
+                    options_for_select([
+                      ['Draft', 'draft'],
+                      ['Active', 'active'],
+                      ['Completed', 'completed']
+                    ], @campaign.status),
+                    {},
+                    {
+                      id: "campaign_status",
+                      class: "form-control"
+                    } %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <%# Section 2: Asset Uploads %>
+        <div class="card mb-4 border-0 shadow-sm">
+          <div class="card-header bg-white border-bottom">
+            <h5 class="mb-0 fw-bold text-dark">
+              <i class="bi bi-image text-primary me-2"></i>
+              Assets & Images
+            </h5>
+          </div>
+          <div class="card-body">
+            <%# Logo Section %>
+            <div class="mb-4">
+              <h6 class="fw-bold mb-3">Business Logo</h6>
+              <% if @business.logo.attached? %>
+                <div class="d-flex align-items-center mb-3">
+                  <div class="me-3">
+                    <%= image_tag @business.logo, class: "img-thumbnail", style: "width: 80px; height: 80px; object-fit: contain;" %>
+                  </div>
+                  <div>
+                    <p class="mb-1 fw-bold">Current Logo</p>
+                    <p class="text-muted small mb-0">Using your business logo</p>
+                  </div>
+                </div>
+              <% else %>
+                <div class="alert alert-info">
+                  <i class="bi bi-info-circle me-2"></i>
+                  No business logo uploaded. Upload one in your <%= link_to "business profile", edit_business_path, class: "alert-link" %>.
+                </div>
+              <% end %>
+            </div>
+
+            <%# Inspiration Images %>
+            <div class="mb-3">
+              <h6 class="fw-bold mb-3">Inspiration Images</h6>
+              <p class="text-muted small mb-3">
+                Upload 1-5 images that represent your desired visual style. 
+                Supported formats: PNG, JPG, SVG. Max size: 5MB per file.
+              </p>
+              
+              <%= f.file_field :inspiration_images,
+                  multiple: true,
+                  accept: "image/png,image/jpeg,image/svg+xml",
+                  class: "form-control",
+                  data: { controller: "file-preview" } %>
+              
+              <div id="image-preview-container" class="mt-3" style="display: none;">
+                <h6 class="small fw-bold mb-2">Preview:</h6>
+                <div id="image-previews" class="row g-2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <%# Section 3: Brand Profile %>
+        <div class="card mb-4 border-0 shadow-sm">
+          <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold text-dark">
+              <i class="bi bi-palette text-primary me-2"></i>
+              Brand Profile
+            </h5>
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#brandProfile">
+              <i class="bi bi-chevron-down"></i>
+            </button>
+          </div>
+          <div class="collapse" id="brandProfile">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="brand_colors" class="form-label fw-bold">Brand Colors</label>
+                  <p class="text-muted small mb-2">Enter hex color codes (e.g., #dc3545, #ffffff)</p>
+                  <%= f.text_field :brand_colors,
+                      id: "brand_colors",
+                      class: "form-control",
+                      placeholder: "#dc3545, #ffffff, #000000",
+                      data: { controller: "color-input" } %>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="brand_fonts" class="form-label fw-bold">Brand Fonts</label>
+                  <p class="text-muted small mb-2">Preferred font families</p>
+                  <%= f.text_field :brand_fonts,
+                      id: "brand_fonts",
+                      class: "form-control",
+                      placeholder: "e.g., Arial, Helvetica, sans-serif" %>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="tone_words" class="form-label fw-bold">Tone Words</label>
+                <p class="text-muted small mb-2">Describe your brand personality</p>
+                <%= f.text_field :tone_words,
+                    id: "tone_words",
+                    class: "form-control",
+                    placeholder: "professional, friendly, modern, trustworthy",
+                    data: { controller: "tag-input" } %>
+              </div>
+              <div class="form-check">
+                <%= f.check_box :save_as_default, { class: "form-check-input" }, "1", "0" %>
+                <label class="form-check-label fw-bold" for="save_as_default">
+                  Save as default for future campaigns
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <%# Section 4: Creative Brief %>
+        <div class="card mb-4 border-0 shadow-sm">
+          <div class="card-header bg-white border-bottom">
+            <h5 class="mb-0 fw-bold text-dark">
+              <i class="bi bi-file-text text-primary me-2"></i>
+              Creative Brief
+            </h5>
+          </div>
+          <div class="card-body">
+            <%# Brief Text Area %>
+            <div class="mb-4">
+              <label for="campaign_brief" class="form-label fw-bold">
+                Campaign Brief <span class="text-danger">*</span>
+              </label>
+              <p class="text-muted small mb-3">
+                Describe your campaign goals, target audience, and key messages. 
+                Minimum 20 characters.
+              </p>
+              <%= f.text_area :brief,
+                  id: "campaign_brief",
+                  class: "form-control #{'is-invalid' if @campaign.errors[:brief].any?}",
+                  rows: 6,
+                  placeholder: "Describe your campaign goals, target audience, and key messages...",
+                  required: true,
+                  data: { 
+                    controller: "brief-autosave",
+                    target: "briefAutosave.textarea"
+                  } %>
+              <div class="d-flex justify-content-between mt-2">
+                <div class="text-muted small">
+                  <span id="word-count">0</span> words
+                </div>
+                <div class="text-muted small">
+                  <span id="char-count">0</span> characters
+                </div>
+                <div class="text-muted small">
+                  <span id="save-indicator"></span>
+                </div>
+              </div>
+              <% if @campaign.errors[:brief].any? %>
+                <div class="invalid-feedback d-block"><%= @campaign.errors[:brief].first %></div>
+              <% end %>
+            </div>
+
+            <%# Quick Chips %>
+            <div class="mb-4">
+              <h6 class="fw-bold mb-3">Quick Prompts</h6>
+              <p class="text-muted small mb-3">Click to add common campaign elements to your brief:</p>
+              <div class="d-flex flex-wrap gap-2" data-controller="chip-selector">
+                <button type="button" class="btn btn-outline-primary btn-sm chip-btn" data-chip="Limited-time promotion">
+                  Limited-time promotion
+                </button>
+                <button type="button" class="btn btn-outline-primary btn-sm chip-btn" data-chip="Grand opening">
+                  Grand opening
+                </button>
+                <button type="button" class="btn btn-outline-primary btn-sm chip-btn" data-chip="Seasonal sale">
+                  Seasonal sale
+                </button>
+                <button type="button" class="btn btn-outline-primary btn-sm chip-btn" data-chip="New product launch">
+                  New product launch
+                </button>
+                <button type="button" class="btn btn-outline-primary btn-sm chip-btn" data-chip="Community event">
+                  Community event
+                </button>
+                <button type="button" class="btn btn-outline-primary btn-sm chip-btn" data-chip="Customer testimonials">
+                  Customer testimonials
+                </button>
+              </div>
+            </div>
+
+            <%# Guided Fields %>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="campaign_goals" class="form-label fw-bold">Goals</label>
+                <%= f.text_area :goals,
+                    id: "campaign_goals",
+                    class: "form-control",
+                    rows: 3,
+                    placeholder: "What do you want to achieve with this campaign?" %>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="campaign_audience" class="form-label fw-bold">Target Audience</label>
+                <%= f.text_area :audience,
+                    id: "campaign_audience",
+                    class: "form-control",
+                    rows: 3,
+                    placeholder: "Who is your target audience?" %>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="campaign_offer" class="form-label fw-bold">Offer Details</label>
+                <%= f.text_area :offer,
+                    id: "campaign_offer",
+                    class: "form-control",
+                    rows: 3,
+                    placeholder: "What special offer or promotion are you running?" %>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="campaign_cta" class="form-label fw-bold">Call to Action</label>
+                <%= f.text_field :cta,
+                    id: "campaign_cta",
+                    class: "form-control",
+                    placeholder: "e.g., Shop Now, Learn More, Get Started" %>
+              </div>
+            </div>
+
+            <%# AI Suggestions Button - Disabled for new campaigns %>
+            <div class="text-center">
+              <button type="button" class="btn btn-outline-secondary" disabled>
+                <i class="bi bi-magic me-2"></i>
+                Get AI Suggestions (Save campaign first)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <%# Section 5: Ad Sizes %>
+        <div class="card mb-4 border-0 shadow-sm">
+          <div class="card-header bg-white border-bottom">
+            <h5 class="mb-0 fw-bold text-dark">
+              <i class="bi bi-aspect-ratio text-primary me-2"></i>
+              Ad Sizes
+            </h5>
+          </div>
+          <div class="card-body">
+            <p class="text-muted mb-3">Select the ad sizes you want to generate:</p>
+            <%= hidden_field_tag "campaign[ad_sizes][]", "" %>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-check mb-3">
+                  <%= check_box_tag "campaign[ad_sizes][]", "300x250", false, { class: "form-check-input", id: "campaign_ad_sizes_300x250" } %>
+                  <label class="form-check-label fw-bold" for="campaign_ad_sizes_300x250">
+                    300×250 (Medium Rectangle)
+                  </label>
+                  <p class="text-muted small mb-0">Standard banner size</p>
+                </div>
+                <div class="form-check mb-3">
+                  <%= check_box_tag "campaign[ad_sizes][]", "728x90", false, { class: "form-check-input", id: "campaign_ad_sizes_728x90" } %>
+                  <label class="form-check-label fw-bold" for="campaign_ad_sizes_728x90">
+                    728×90 (Leaderboard)
+                  </label>
+                  <p class="text-muted small mb-0">Wide banner for headers</p>
+                </div>
+                <div class="form-check mb-3">
+                  <%= check_box_tag "campaign[ad_sizes][]", "160x600", false, { class: "form-check-input", id: "campaign_ad_sizes_160x600" } %>
+                  <label class="form-check-label fw-bold" for="campaign_ad_sizes_160x600">
+                    160×600 (Wide Skyscraper)
+                  </label>
+                  <p class="text-muted small mb-0">Sidebar placement</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-check mb-3">
+                  <%= check_box_tag "campaign[ad_sizes][]", "300x600", false, { class: "form-check-input", id: "campaign_ad_sizes_300x600" } %>
+                  <label class="form-check-label fw-bold" for="campaign_ad_sizes_300x600">
+                    300×600 (Half Page)
+                  </label>
+                  <p class="text-muted small mb-0">Large vertical banner</p>
+                </div>
+                <div class="form-check mb-3">
+                  <%= check_box_tag "campaign[ad_sizes][]", "320x50", false, { class: "form-check-input", id: "campaign_ad_sizes_320x50" } %>
+                  <label class="form-check-label fw-bold" for="campaign_ad_sizes_320x50">
+                    320×50 (Mobile Banner)
+                  </label>
+                  <p class="text-muted small mb-0">Mobile-optimized</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <%# Form Actions %>
+        <div class="d-flex gap-3 justify-content-end">
+          <%= link_to "Cancel", campaigns_path, class: "btn btn-outline-secondary" %>
+          <%= f.submit "Create Campaign", class: "btn btn-primary btn-lg" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
