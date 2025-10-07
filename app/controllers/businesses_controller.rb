@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class BusinessesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_business, only: [:show, :edit, :update]
+  before_action :set_business, only: [ :show, :edit, :update ]
   def show
     redirect_to new_business_path unless current_user.business
   end
@@ -14,7 +16,7 @@ class BusinessesController < ApplicationController
   def create
     @business = current_user.build_business(business_params)
     if @business.save
-      redirect_to business_path, notice: "Business profile created successfully!"
+      redirect_to business_path, notice: 'Business profile created successfully!'
     else
       # Ensure we have at least one contact person for the form
       @business.contact_people.build if @business.contact_people.empty?
@@ -27,7 +29,7 @@ class BusinessesController < ApplicationController
 
   def update
     if @business.update(business_params)
-      redirect_to business_path, notice: "Business profile updated."
+      redirect_to business_path, notice: 'Business profile updated.'
     else
       render :edit, status: :unprocessable_entity
     end
@@ -43,7 +45,7 @@ class BusinessesController < ApplicationController
       :name, :type_of_business, :description, :website, :email, :phone,
       :address_1, :address_2, :city, :state, :postal_code, :country,
       :logo,
-      contact_people_attributes: [:id, :first_name, :last_name, :title, :email, :phone, :_destroy]
+      contact_people_attributes: [ :id, :first_name, :last_name, :title, :email, :phone, :_destroy ]
     )
   end
 end

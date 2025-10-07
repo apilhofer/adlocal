@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class ContactPeopleController < ApplicationController
   before_action :authenticate_user!
   before_action :set_business
-  before_action :set_contact, only: [:edit, :update, :destroy]
+  before_action :set_contact, only: [ :edit, :update, :destroy ]
 
   def index
     @contacts = @business.contact_people
@@ -14,7 +16,7 @@ class ContactPeopleController < ApplicationController
   def create
     @contact = @business.contact_people.new(contact_params)
     if @contact.save
-      redirect_to business_path, notice: "Contact added."
+      redirect_to business_path, notice: 'Contact added.'
     else
       render :new, status: :unprocessable_entity
     end
@@ -24,7 +26,7 @@ class ContactPeopleController < ApplicationController
 
   def update
     if @contact.update(contact_params)
-      redirect_to business_path, notice: "Contact updated."
+      redirect_to business_path, notice: 'Contact updated.'
     else
       render :edit, status: :unprocessable_entity
     end
@@ -32,7 +34,7 @@ class ContactPeopleController < ApplicationController
 
   def destroy
     @contact.destroy
-    redirect_to business_contact_people_path, notice: "Contact removed."
+    redirect_to business_contact_people_path, notice: 'Contact removed.'
   end
 
   private
@@ -48,4 +50,3 @@ class ContactPeopleController < ApplicationController
     params.require(:contact_person).permit(:first_name, :last_name, :title, :email, :phone)
   end
 end
-

@@ -21,9 +21,9 @@ unless user.business
     website: "https://www.samplecoffee.com"
   )
   biz.contact_people.create!(
-    first_name: "Alex", 
-    last_name: "Ng", 
-    title: "Owner", 
+    first_name: "Alex",
+    last_name: "Ng",
+    title: "Owner",
     email: "alex@samplecoffee.com",
     phone: "(312) 555-0124"
   )
