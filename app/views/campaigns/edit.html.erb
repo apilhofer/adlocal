@@ -125,12 +125,12 @@
           </div>
         </div>
 
-        <%# Section 3: Brand Profile %>
+        <%# Section 3: Brand Profile Override %>
         <div class="card mb-4 border-0 shadow-sm">
           <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
             <h5 class="mb-0 fw-bold text-dark">
               <i class="bi bi-palette text-primary me-2"></i>
-              Brand Profile
+              Brand Profile Override
             </h5>
             <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#brandProfile">
               <i class="bi bi-chevron-down"></i>
@@ -138,41 +138,46 @@
           </div>
           <div class="collapse show" id="brandProfile">
             <div class="card-body">
+              <div class="alert alert-info mb-4">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Default values from your business:</strong>
+                <ul class="mb-0 mt-2">
+                  <li><strong>Colors:</strong> <%= @business.brand_colors_array.any? ? @business.brand_colors_array.join(", ") : "Not set" %></li>
+                  <li><strong>Fonts:</strong> <%= @business.brand_fonts.present? ? @business.brand_fonts : "Not set" %></li>
+                  <li><strong>Tone:</strong> <%= @business.tone_words_array.any? ? @business.tone_words_array.join(", ") : "Not set" %></li>
+                </ul>
+              </div>
+              <p class="text-muted mb-3">Override these defaults for this specific campaign, or leave blank to use business defaults.</p>
+              
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label for="brand_colors" class="form-label fw-bold">Brand Colors</label>
+                  <label for="brand_colors" class="form-label fw-bold">Brand Colors Override</label>
                   <p class="text-muted small mb-2">Enter hex color codes (e.g., #dc3545, #ffffff)</p>
                   <%= f.text_field :brand_colors,
                       id: "brand_colors",
                       class: "form-control",
-                      placeholder: "#dc3545, #ffffff, #000000",
+                      placeholder: "Leave blank to use business default: #{@business.brand_colors_array.join(', ')}",
                       value: @campaign.brand_colors_array.join(", "),
                       data: { controller: "color-input" } %>
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label for="brand_fonts" class="form-label fw-bold">Brand Fonts</label>
+                  <label for="brand_fonts" class="form-label fw-bold">Brand Fonts Override</label>
                   <p class="text-muted small mb-2">Preferred font families</p>
                   <%= f.text_field :brand_fonts,
                       id: "brand_fonts",
                       class: "form-control",
-                      placeholder: "e.g., Arial, Helvetica, sans-serif" %>
+                      placeholder: "Leave blank to use business default: #{@business.brand_fonts}" %>
                 </div>
               </div>
               <div class="mb-3">
-                <label for="tone_words" class="form-label fw-bold">Tone Words</label>
+                <label for="tone_words" class="form-label fw-bold">Tone Words Override</label>
                 <p class="text-muted small mb-2">Describe your brand personality</p>
                 <%= f.text_field :tone_words,
                     id: "tone_words",
                     class: "form-control",
-                    placeholder: "professional, friendly, modern, trustworthy",
+                    placeholder: "Leave blank to use business default: #{@business.tone_words_array.join(', ')}",
                     value: @campaign.tone_words_array.join(", "),
                     data: { controller: "tag-input" } %>
-              </div>
-              <div class="form-check">
-                <%= f.check_box :save_as_default, { class: "form-check-input" }, "1", "0" %>
-                <label class="form-check-label fw-bold" for="save_as_default">
-                  Save as default for future campaigns
-                </label>
               </div>
             </div>
           </div>

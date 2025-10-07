@@ -121,13 +121,13 @@ class CampaignTest < ActiveSupport::TestCase
 
   test "status_badge_class should return correct classes" do
     @campaign.status = "draft"
-    assert_equal "bg-gray-100 text-gray-800", @campaign.status_badge_class
+    assert_equal "badge bg-secondary", @campaign.status_badge_class
     
     @campaign.status = "active"
-    assert_equal "bg-green-100 text-green-800", @campaign.status_badge_class
+    assert_equal "badge bg-success", @campaign.status_badge_class
     
     @campaign.status = "completed"
-    assert_equal "bg-blue-100 text-blue-800", @campaign.status_badge_class
+    assert_equal "badge bg-primary", @campaign.status_badge_class
   end
 
   test "can_edit? should return true for draft campaigns" do

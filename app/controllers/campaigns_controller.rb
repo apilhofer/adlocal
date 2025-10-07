@@ -19,30 +19,22 @@ class CampaignsController < ApplicationController
 
   def new
     @campaign = @business.campaigns.build
-    # Pre-populate with business brand profile if available
-    if @business.has_brand_profile?
-      @campaign.brand_colors = @business.brand_colors_array
-      @campaign.brand_fonts = @business.brand_fonts
-      @campaign.tone_words = @business.tone_words_array
-    end
+    # Pre-populate with business brand profile defaults
+    @campaign.brand_colors = @business.brand_colors_array
+    @campaign.brand_fonts = @business.brand_fonts
+    @campaign.tone_words = @business.tone_words_array
   end
 
   def create
     @campaign = @business.campaigns.build(campaign_params)
     
+    # Apply business defaults for any blank brand profile fields
+    apply_business_defaults_to_campaign(@campaign)
+    
     if @campaign.save
       # Handle inspiration images upload
       if params[:campaign][:inspiration_images].present?
         @campaign.inspiration_images.attach(params[:campaign][:inspiration_images])
-      end
-      
-      # Save brand profile to business if requested
-      if params[:save_as_default] == '1'
-        @business.update(
-          brand_colors: @campaign.brand_colors,
-          brand_fonts: @campaign.brand_fonts,
-          tone_words: @campaign.tone_words
-        )
       end
       
       redirect_to @campaign, notice: 'Campaign created successfully!'
@@ -55,19 +47,15 @@ class CampaignsController < ApplicationController
   end
 
   def update
-    if @campaign.update(campaign_params)
+    @campaign.assign_attributes(campaign_params)
+    
+    # Apply business defaults for any blank brand profile fields
+    apply_business_defaults_to_campaign(@campaign)
+    
+    if @campaign.save
       # Handle inspiration images upload
       if params[:campaign][:inspiration_images].present?
         @campaign.inspiration_images.attach(params[:campaign][:inspiration_images])
-      end
-      
-      # Save brand profile to business if requested
-      if params[:save_as_default] == '1'
-        @business.update(
-          brand_colors: @campaign.brand_colors,
-          brand_fonts: @campaign.brand_fonts,
-          tone_words: @campaign.tone_words
-        )
       end
       
       redirect_to @campaign, notice: 'Campaign updated successfully!'
@@ -105,6 +93,15 @@ class CampaignsController < ApplicationController
 
   def set_campaign
     @campaign = @business.campaigns.find(params[:id])
+  end
+
+  private
+
+  def apply_business_defaults_to_campaign(campaign)
+    # Apply business defaults for any blank brand profile fields
+    campaign.brand_colors = campaign.brand_colors_array.any? ? campaign.brand_colors_array : @business.brand_colors_array
+    campaign.brand_fonts = campaign.brand_fonts.present? ? campaign.brand_fonts : @business.brand_fonts
+    campaign.tone_words = campaign.tone_words_array.any? ? campaign.tone_words_array : @business.tone_words_array
   end
 
   def campaign_params

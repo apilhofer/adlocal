@@ -41,6 +41,111 @@ class CampaignsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to campaign_url(Campaign.last)
   end
 
+  test "should create campaign with business brand defaults" do
+    # Set up business brand profile
+    @business.update!(
+      brand_colors: ["#FF0000", "#00FF00"],
+      brand_fonts: "Arial, sans-serif",
+      tone_words: ["bold", "modern"]
+    )
+
+    assert_difference("Campaign.count") do
+      post campaigns_url, params: {
+        campaign: {
+          name: "Campaign with Defaults",
+          brief: "This is a test campaign brief with enough content to pass validation",
+          status: "draft"
+          # No brand profile fields provided - should inherit from business
+        }
+      }
+    end
+
+    campaign = Campaign.last
+    assert_equal ["#FF0000", "#00FF00"], campaign.brand_colors_array
+    assert_equal "Arial, sans-serif", campaign.brand_fonts
+    assert_equal ["bold", "modern"], campaign.tone_words_array
+  end
+
+  test "should create campaign with overridden brand profile" do
+    # Set up business brand profile
+    @business.update!(
+      brand_colors: ["#FF0000", "#00FF00"],
+      brand_fonts: "Arial, sans-serif",
+      tone_words: ["bold", "modern"]
+    )
+
+    assert_difference("Campaign.count") do
+      post campaigns_url, params: {
+        campaign: {
+          name: "Campaign with Overrides",
+          brief: "This is a test campaign brief with enough content to pass validation",
+          status: "draft",
+          brand_colors: ["#0000FF"],
+          brand_fonts: "Times, serif",
+          tone_words: ["elegant", "classic"]
+        }
+      }
+    end
+
+    campaign = Campaign.last
+    assert_equal ["#0000FF"], campaign.brand_colors_array
+    assert_equal "Times, serif", campaign.brand_fonts
+    assert_equal ["elegant", "classic"], campaign.tone_words_array
+  end
+
+  test "should create campaign with partial brand profile overrides" do
+    # Set up business brand profile
+    @business.update!(
+      brand_colors: ["#FF0000", "#00FF00"],
+      brand_fonts: "Arial, sans-serif",
+      tone_words: ["bold", "modern"]
+    )
+
+    assert_difference("Campaign.count") do
+      post campaigns_url, params: {
+        campaign: {
+          name: "Campaign with Partial Overrides",
+          brief: "This is a test campaign brief with enough content to pass validation",
+          status: "draft",
+          brand_colors: ["#0000FF"]  # Only override colors, fonts and tone should inherit
+        }
+      }
+    end
+
+    campaign = Campaign.last
+    assert_equal ["#0000FF"], campaign.brand_colors_array
+    assert_equal "Arial, sans-serif", campaign.brand_fonts  # Inherited from business
+    assert_equal ["bold", "modern"], campaign.tone_words_array  # Inherited from business
+  end
+
+  test "should update campaign with business brand defaults" do
+    # Set up business brand profile
+    @business.update!(
+      brand_colors: ["#FF0000", "#00FF00"],
+      brand_fonts: "Arial, sans-serif",
+      tone_words: ["bold", "modern"]
+    )
+
+    # Clear campaign brand profile
+    @campaign.update!(
+      brand_colors: nil,
+      brand_fonts: nil,
+      tone_words: nil
+    )
+
+    patch campaign_url(@campaign), params: {
+      campaign: {
+        name: "Updated Campaign"
+        # No brand profile fields provided - should inherit from business
+      }
+    }
+
+    @campaign.reload
+    assert_equal ["#FF0000", "#00FF00"], @campaign.brand_colors_array
+    assert_equal "Arial, sans-serif", @campaign.brand_fonts
+    assert_equal ["bold", "modern"], @campaign.tone_words_array
+  end
+
   test "should show campaign" do
     get campaign_url(@campaign)
     assert_response :success
@@ -133,37 +238,6 @@ class CampaignsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to campaign_url(@campaign)
   end
 
-  test "should save brand profile to business when requested" do
-    post campaigns_url, params: {
-      campaign: {
-        name: "Test Campaign with Brand Save",
-        brief: "This is a test campaign brief with enough content to pass validation",
-        brand_colors: ["#ff0000", "#00ff00"],
-        brand_fonts: "Arial, sans-serif",
-        tone_words: ["bold", "modern"]
-      },
-      save_as_default: "1"
-    }
-    
-    @business.reload
-    assert_equal ["#ff0000", "#00ff00"], @business.brand_colors
-    assert_equal "Arial, sans-serif", @business.brand_fonts
-    assert_equal ["bold", "modern"], @business.tone_words
-  end
-
-  test "should not save brand profile to business when not requested" do
-    original_colors = @business.brand_colors
-    
-    post campaigns_url, params: {
-      campaign: {
-        name: "Test Campaign without Brand Save",
-        brief: "This is a test campaign brief with enough content to pass validation",
-        brand_colors: ["#ff0000", "#00ff00"]
-      },
-      save_as_default: "0"
-    }
-    
-    @business.reload
-    assert_equal original_colors, @business.brand_colors
-  end
+  # Note: Brand profile "save as default" functionality was removed
+  # Brand profiles are now managed directly in the business form
 end

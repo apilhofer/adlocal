@@ -45,6 +45,9 @@ class BusinessesControllerTest < ActionDispatch::IntegrationTest
           state: 'IL',
           postal_code: '60603',
           country: 'United States',
+          brand_colors: ['#FF0000', '#00FF00'],
+          brand_fonts: 'Arial, sans-serif',
+          tone_words: ['professional', 'modern'],
           contact_people_attributes: {
             '0' => {
               first_name: 'Test',
@@ -64,12 +67,18 @@ class BusinessesControllerTest < ActionDispatch::IntegrationTest
     patch business_url, params: {
       business: {
         name: 'Updated Business Name',
-        type_of_business: 'Updated Business Type'
+        type_of_business: 'Updated Business Type',
+        brand_colors: ['#0000FF', '#FFFF00'],
+        brand_fonts: 'Times, serif',
+        tone_words: ['elegant', 'classic']
       }
     }
     assert_redirected_to business_url
     @business.reload
     assert_equal 'Updated Business Name', @business.name
     assert_equal 'Updated Business Type', @business.type_of_business
+    assert_equal ['#0000FF', '#FFFF00'], @business.brand_colors_array
+    assert_equal 'Times, serif', @business.brand_fonts
+    assert_equal ['elegant', 'classic'], @business.tone_words_array
   end
 end
