@@ -2,7 +2,7 @@ class BusinessesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_business, only: [:show, :edit, :update]
   def show
-    redirect_to new_business_path unless current_user.business
+    return redirect_to(new_business_path) unless @business
   end
 
   def new
