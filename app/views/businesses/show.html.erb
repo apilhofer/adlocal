@@ -175,6 +175,58 @@
           <% end %>
         </div>
       </div>
-    </div>
-  </div>
-</div>
+
+      <!-- Brand Profile Card -->
+      <div class="card mt-4">
+        <div class="card-header d-flex align-items-center">
+          <i class="bi bi-palette text-primary me-2"></i>
+          <h2 class="h5 fw-semibold mb-0">Brand Profile</h2>
+        </div>
+        <div class="card-body">
+          <% if @business.has_brand_profile? %>
+            <div class="d-flex flex-column gap-3">
+              <!-- Brand Colors -->
+              <% if @business.brand_colors_array.any? %>
+                <div>
+                  <label class="form-label fw-bold small mb-2">Brand Colors</label>
+                  <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <% @business.brand_colors_array.each do |color| %>
+                      <div class="d-flex align-items-center">
+                        <div class="rounded me-2" style="width: 20px; height: 20px; background-color: <%= color %>; border: 1px solid #dee2e6;"></div>
+                        <span class="text-muted small"><%= color %></span>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+
+              <!-- Brand Fonts -->
+              <% if @business.brand_fonts.present? %>
+                <div>
+                  <label class="form-label fw-bold small mb-2">Brand Fonts</label>
+                  <p class="mb-0 text-muted small" style="font-family: <%= @business.brand_fonts %>;"><%= @business.brand_fonts %></p>
+                </div>
+              <% end %>
+
+              <!-- Tone Words -->
+              <% if @business.tone_words_array.any? %>
+                <div>
+                  <label class="form-label fw-bold small mb-2">Tone Words</label>
+                  <div class="d-flex flex-wrap gap-1">
+                    <% @business.tone_words_array.each do |word| %>
+                      <span class="badge bg-light text-dark border"><%= word %></span>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-center py-4">
+              <i class="bi bi-palette text-muted mb-3" style="font-size: 3rem;"></i>
+              <p class="text-muted mb-3">No brand profile set yet</p>
+              <p class="text-muted small mb-3">Set your brand colors, fonts, and tone to help create consistent advertising campaigns.</p>
+              <%= link_to "Set Brand Profile", edit_business_path(anchor: 'brand-profile'), class: "btn btn-primary btn-sm" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
