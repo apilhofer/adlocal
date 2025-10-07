@@ -71,3 +71,27 @@
 .logo-text .local {
   color: #dc3545;
 }
+
+/* Footer specific styles */
+.logo-text-footer .ad-footer {
+  color: #ffffff;
+}
+
+.logo-text-footer .local-footer {
+  color: #dc3545;
+}
+
+/* Footer link hover effects */
+footer a:hover {
+  color: #dc3545 !important;
+  transition: color 0.3s ease;
+}
+
+/* Footer spacing and typography */
+footer h5 {
+  letter-spacing: 0.5px;
+}
+
+footer ul li {
+  line-height: 1.6;
+}

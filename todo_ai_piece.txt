@@ -1,0 +1,235 @@
+awesome—here’s a clean backlog of user stories for **AdLocal** based on your Rails 8, no-refresh creative generator. they’re grouped into epics with crisp acceptance criteria so you can drop them straight into Jira/Linear.
+
+# Epic A — Onboarding & Account
+
+1. **Sign in**
+
+* *As a* local business owner (LBO), *I want* to sign in securely, *so that* only I can access my ad projects.
+  **Acceptance**:
+* Given I have an account, when I enter valid credentials, then I’m taken to my dashboard.
+* When invalid credentials are submitted, I see a clear error and remain on the sign-in page.
+* MFA (if enabled) completes before access is granted.
+
+2. **Account setup**
+
+* *As an* LBO, *I want* to add my business name, industry, and site URL, *so that* the system can tailor ad suggestions.
+  **Acceptance**: fields are persisted; incomplete forms show inline validation.
+
+3. **Brand profile**
+
+* *As an* LBO, *I want* to save brand colors, fonts, tone words, *so that* generated ads feel on-brand.
+  **Acceptance**: Saved settings auto-apply to future generations.
+
+---
+
+# Epic B — Asset Uploads (Logo & Inspiration)
+
+4. **Direct logo upload**
+
+* *As an* LBO, *I want* to upload my logo via drag/drop, *so that* it’s available during ad generation.
+  **Acceptance**:
+* PNG/SVG/JPG accepted; max size enforced; upload progress visible; upload via direct S3 works without page refresh.
+* On success I see a thumbnail; on failure I get an actionable error.
+
+5. **Inspiration images**
+
+* *As an* LBO, *I want* to upload multiple inspiration images, *so that* the system understands my visual direction.
+  **Acceptance**: multiple file select; thumbnails rendered; I can remove any before submitting.
+
+6. **Asset safety checks**
+
+* *As an* LBO, *I want* the app to block disallowed or corrupted files, *so that* I don’t break my project.
+  **Acceptance**: content-type/size validation; clear errors; safe defaults (virus scan if applicable).
+
+---
+
+# Epic C — Creative Brief & Prompting
+
+7. **Brief input**
+
+* *As an* LBO, *I want* a text box for goals, audience, offer, CTA, *so that* the AI can craft relevant ads.
+  **Acceptance**: autosave draft; word count hint; placeholders/examples present.
+
+8. **Guided prompts**
+
+* *As an* LBO, *I want* quick chips (e.g., “Limited-time promo”, “Grand opening”), *so that* I can compose a brief faster.
+  **Acceptance**: selecting chips appends structured text to the brief.
+
+9. **Brand guardrails toggle**
+
+* *As an* LBO, *I want* to require on-brand language and compliant claims, *so that* ads meet my standards.
+  **Acceptance**: toggling enables stricter prompting and filters.
+
+---
+
+# Epic D — Ad Generation (Realtime, No Refresh)
+
+10. **Generate concepts (streaming)**
+
+* *As an* LBO, *I want* to submit my brief & assets and see copy stream in live, *so that* I get immediate feedback.
+  **Acceptance**: clicking “Generate” starts a progress indicator; copy appears incrementally; no page refresh.
+
+11. **Multi-size outputs**
+
+* *As an* LBO, *I want* common display sizes (300×250, 728×90, 160×600, 300×600), *so that* I can use ads across placements.
+  **Acceptance**: I can select sizes before generation; each selected size produces an image tile when done.
+
+12. **Variant count**
+
+* *As an* LBO, *I want* 3–5 creative variants per run, *so that* I can compare ideas.
+  **Acceptance**: I see labeled Variant A/B/C; copy + image per variant.
+
+13. **Cost controls**
+
+* *As an* LBO, *I want* to see credits used per generation, *so that* I manage spend.
+  **Acceptance**: credits debited only on successful generations; an estimate is shown pre-run.
+
+---
+
+# Epic E — Results Review & Editing
+
+14. **Inline review**
+
+* *As an* LBO, *I want* to view each variant with headline, subhead, CTA, and image, *so that* I can evaluate quickly.
+  **Acceptance**: each card shows copy + preview image; hover to zoom; metadata (size/seed) visible.
+
+15. **Quick edits**
+
+* *As an* LBO, *I want* to tweak copy inline and re-generate just the image (or vice versa), *so that* I iterate fast.
+  **Acceptance**: editing copy enables “Regenerate image” on that variant; updating image prompt enables “Regenerate copy” only.
+
+16. **Replace inspiration mid-stream**
+
+* *As an* LBO, *I want* to add/remove an inspiration image and re-run, *so that* the output better matches my taste.
+  **Acceptance**: modified asset set persists and is reflected in next generation.
+
+17. **Select & favorite**
+
+* *As an* LBO, *I want* to mark favorites, *so that* I keep the best options handy.
+  **Acceptance**: clicking ☆ pins to top and saves status.
+
+18. **Download assets**
+
+* *As an* LBO, *I want* to download PNG/JPG and a copy deck, *so that* I can hand files to my ad platform.
+  **Acceptance**: single and bulk download available; zipped multi-size download supported.
+
+---
+
+# Epic F — Projects & History
+
+19. **Project autosave**
+
+* *As an* LBO, *I want* my project to autosave after each action, *so that* nothing is lost.
+  **Acceptance**: a “Saved” badge updates within 1s of changes.
+
+20. **Version history**
+
+* *As an* LBO, *I want* to view prior generations and prompts, *so that* I can revert or reproduce results.
+  **Acceptance**: timeline with restore; restored version becomes current without data loss.
+
+21. **Duplicate project**
+
+* *As an* LBO, *I want* to clone a successful project, *so that* I can create a new campaign faster.
+  **Acceptance**: clone includes brief, brand settings, assets; not prior outputs unless selected.
+
+---
+
+# Epic G — Branding, Compliance & Moderation
+
+22. **Logo placement rule**
+
+* *As an* LBO, *I want* consistent safe-area logo placement, *so that* branding is readable in all sizes.
+  **Acceptance**: generated images preserve a non-overlap zone; logo composited if opted-in.
+
+23. **Claims & sensitive content checks**
+
+* *As an* LBO, *I want* the app to flag risky claims (e.g., superlatives, restricted categories), *so that* I avoid ad rejections.
+  **Acceptance**: flagged content shows explanation and suggested edits before download.
+
+24. **Copyright & imagery policy**
+
+* *As an* LBO, *I want* warnings if inspiration images could create lookalikes of protected brands, *so that* I reduce legal risk.
+  **Acceptance**: soft-block + guidance; continue requires explicit confirmation.
+
+---
+
+# Epic H — Billing, Quotas & Roles
+
+25. **Plan limits**
+
+* *As an* LBO, *I want* to see my remaining monthly generations and storage, *so that* I can plan usage.
+  **Acceptance**: dashboard widget updates in real-time.
+
+26. **Top-up**
+
+* *As an* LBO, *I want* to purchase additional credits, *so that* I can finish urgent work.
+  **Acceptance**: purchase confirms; credits available immediately.
+
+27. **Teammate access (optional)**
+
+* *As an* LBO, *I want* to invite a collaborator with view/comment access, *so that* I can get feedback.
+  **Acceptance**: role-based permissions enforced; audit log captures actions.
+
+---
+
+# Epic I — Notifications & Guidance
+
+28. **Realtime progress**
+
+* *As an* LBO, *I want* to see a progress bar / streaming tokens, *so that* I know the system is working.
+  **Acceptance**: no refresh; states: queued → generating copy → generating images → ready.
+
+29. **Tips & best practices**
+
+* *As an* LBO, *I want* contextual tips (e.g., “headline ≤ 7 words”), *so that* outputs pass network standards.
+  **Acceptance**: tips appear inline and can be dismissed; dismissals persist.
+
+30. **Email summary (optional)**
+
+* *As an* LBO, *I want* an email with my best variants and download links, *so that* I can review later.
+  **Acceptance**: toggled per project; links expire securely.
+
+---
+
+# Epic J — Accessibility, Performance & Reliability (NFRs)
+
+31. **A11y**
+
+* *As an* LBO using assistive tech, *I want* WCAG-compliant forms and live regions, *so that* I can operate the app fully.
+  **Acceptance**: keyboard-only navigation; ARIA for streaming regions; contrast ≥ 4.5:1.
+
+32. **Latency**
+
+* *As an* LBO, *I want* the UI to stay responsive during generation, *so that* I can continue editing other fields.
+  **Acceptance**: main thread remains interactive; loading states are non-blocking.
+
+33. **Resilience**
+
+* *As an* LBO, *I want* safe retries if a generation step fails, *so that* I don’t lose progress or credits unfairly.
+  **Acceptance**: automatic retry once; if still failing, credits are restored and a clear error shown.
+
+---
+
+# Epic K — Support & Help
+
+34. **In-app help**
+
+* *As an* LBO, *I want* quick documentation and short videos, *so that* I learn features without leaving my project.
+  **Acceptance**: searchable help modal; context links near relevant controls.
+
+35. **Contact support**
+
+* *As an* LBO, *I want* to submit a support ticket with project context, *so that* I get faster resolutions.
+  **Acceptance**: ticket includes last error IDs, model/version, and asset references.
+
+---
+
+## Definition of Done (global)
+
+* All flows work without page refresh (Turbo/Stimulus/fetch).
+* Server key never exposed; uploads use direct S3; signed URLs are short-lived.
+* Errors are actionable, not generic.
+* Telemetry: generation duration, success rate, credit consumption, and per-size render time captured.
+* Basic unit + request specs for upload, generation, and streaming; happy-path Cypress (or Playwright) for end-to-end.
+
+If helpful, I can convert this into a CSV or Jira importable JSON, or expand any epic into detailed tasks (UX, backend, Stimulus controllers, ActionCable/Turbo Streams wiring).

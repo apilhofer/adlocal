@@ -142,27 +142,76 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white py-5 mt-5">
+    <footer class="bg-dark text-white py-5">
       <div class="container">
-        <div class="row">
-          <div class="col-md-6 mb-4">
-            <h3 class="h4 fw-bold mb-3">About Us</h3>
-            <p class="text-light">
-              AdLocal is committed to providing our community with accessible and trusted news, 
-              information and local journalism that matters to you.
-            </p>
+        <!-- Main Footer Content -->
+        <div class="row mb-4">
+          <!-- Logo Section -->
+          <div class="col-lg-3 mb-4">
+            <%= link_to root_path, class: "text-decoration-none" do %>
+              <div class="d-flex align-items-center mb-3">
+                <!-- Logo Icon -->
+                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                  <span class="text-dark fw-bold">A</span>
+                </div>
+                <!-- Logo Text -->
+                <div class="logo-text-footer">
+                  <span class="ad-footer text-white fw-bold fs-4">Ad</span><span class="local-footer text-danger fw-bold fs-4">Local</span>
+                </div>
+              </div>
+            <% end %>
           </div>
-          <div class="col-md-6 mb-4">
-            <h3 class="h4 fw-bold mb-3">Our Mission</h3>
-            <p class="text-light">
-              We ask tough questions, dig deep for answers, and bring you the stories that 
-              shape our local community and beyond.
-            </p>
+
+          <!-- About Column -->
+          <div class="col-lg-3 mb-4">
+            <h5 class="fw-bold text-uppercase mb-3">About</h5>
+            <ul class="list-unstyled">
+              <li class="mb-2"><a href="#" class="text-light text-decoration-none">Careers</a></li>
+              <li class="mb-2"><a href="#" class="text-light text-decoration-none">Our Team</a></li>
+              <li class="mb-2"><a href="#" class="text-light text-decoration-none">Board of Directors</a></li>
+              <li class="mb-2"><a href="#" class="text-light text-decoration-none">Management Team</a></li>
+              <li class="mb-2"><a href="#" class="text-light text-decoration-none">Pressroom</a></li>
+            </ul>
+          </div>
+
+          <!-- Connect Column -->
+          <div class="col-lg-3 mb-4">
+            <h5 class="fw-bold text-uppercase mb-3">Connect</h5>
+            <ul class="list-unstyled">
+              <li class="mb-2"><a href="#" class="text-light text-decoration-none">Contact Us</a></li>
+              <li class="mb-2"><a href="#" class="text-light text-decoration-none">Newsletter</a></li>
+              <li class="mb-2"><a href="#" class="text-light text-decoration-none">Pricing</a></li>
+              <li class="mb-2"><a href="#" class="text-light text-decoration-none">About</a></li>
+            </ul>
+          </div>
+
+          <!-- Support Column -->
+          <div class="col-lg-3 mb-4">
+            <h5 class="fw-bold text-uppercase mb-3">Support</h5>
+            <ul class="list-unstyled">
+              <li class="mb-2"><a href="#" class="text-light text-decoration-none">Donate</a></li>
+              <li class="mb-2"><a href="#" class="text-light text-decoration-none">FAQ</a></li>
+              <li class="mb-2"><a href="#" class="text-light text-decoration-none">Documentation</a></li>
+              <li class="mb-2"><a href="#" class="text-light text-decoration-none">File a Ticket</a></li>
+            </ul>
           </div>
         </div>
+
+        <!-- Footer Bottom -->
         <hr class="border-secondary my-4">
-        <div class="text-center">
-          <p class="text-muted mb-0">&copy; <%= Date.current.year %> AdLocal. All rights reserved.</p>
+        <div class="row align-items-center">
+          <div class="col-lg-3">
+            <div class="d-flex align-items-center" style="flex-wrap: nowrap;">
+              <img class="me-3" src="https://cst.brightspotcdn.com/e2/e8/d6c0079e4b209f1a5dc0234be3fc/cpm-logo-footer.svg" alt="Chicago Public Media logo" width="180" height="18">
+              <span class="text-white small me-2" style="white-space: nowrap;">© 2025 Chicago Public Media</span>
+              <span class="text-white small me-2" style="white-space: nowrap;">|</span>
+              <a href="https://www.wbez.org/chicago-public-media-privacy-policy" class="text-white text-decoration-none small me-2" target="_blank" style="white-space: nowrap;">Privacy Policy</a>
+              <span class="text-white small me-2" style="white-space: nowrap;">|</span>
+              <a href="https://wbez-assets.s3.amazonaws.com/pdf/Chicago_Public_Media_Terms_of_Use_2013.pdf" class="text-white text-decoration-none small me-2" target="_blank" style="white-space: nowrap;">Terms of Use</a>
+              <span class="text-white small me-2" style="white-space: nowrap;">|</span>
+              <a href="https://publicfiles.fcc.gov/fm-profile/wbez" class="text-white text-decoration-none small me-2" target="_blank" style="white-space: nowrap;">FCC Public Documents</a>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
