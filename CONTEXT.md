@@ -35,6 +35,7 @@ AdLocal is a Rails 8 application for small businesses to create AI-powered adver
 - ✅ Default ad sizes selection for new campaigns
 - ✅ Campaign completion percentage calculation
 - ✅ Logo upload requirements for business profiles
+- ✅ Standardized element (buttons, menus, dropdowns, input boxes, labels, etc) styling across application
 
 ## Current State
 - All tests passing
@@ -123,6 +124,24 @@ app/
 - Maintain responsive design
 - Ensure accessibility compliance
 - Test coverage for all new features
+
+## UI Standards
+### Generate Ads Button
+- **Standard styling**: `btn btn-outline-primary` with magic wand icon
+- **Icon**: `<i class="bi bi-magic me-1"></i>` (Bootstrap Icons)
+- **Size**: `btn-lg` for show page, `btn-sm` for index cards
+- **Consistent across**: campaigns/show.html.erb and campaigns/index.html.erb
+- **Purpose**: Clearly indicates AI-powered functionality
+
+### Comprehensive Styling Standards
+- **Document**: `STYLING_STANDARDS.md` contains complete UI guidelines
+- **Button Standards**: All buttons use outlined variants (`btn-outline-primary`, `btn-outline-secondary`)
+- **Form Standards**: Consistent labels (`form-label fw-bold`), validation styling (`is-invalid`, `invalid-feedback`)
+- **Card Standards**: Standardized card structure with headers and shadows
+- **Color Scheme**: Bootstrap color palette with red primary (`#dc3545`)
+- **Typography**: `fw-bold` for headings, `text-muted` for secondary text
+- **Icons**: Bootstrap Icons with consistent spacing (`me-2`, `me-1`)
+- **Responsive**: Mobile-first design with `md:` and `lg:` breakpoints
 
 ## Common Commands
 ```bash

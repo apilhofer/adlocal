@@ -100,15 +100,18 @@
                   <% end %>
                   
                   <% if campaign.can_generate_ads? %>
-                    <%= link_to "Generate Ads", "#", class: "btn btn-primary btn-sm flex-fill" %>
+                    <%= link_to "#", class: "btn btn-outline-primary btn-sm flex-fill" do %>
+                      <i class="bi bi-magic me-1"></i>
+                      Generate Ads
+                    <% end %>
                   <% elsif campaign.status == 'ready' %>
-                    <%= link_to "View Ads", "#", class: "btn btn-info btn-sm flex-fill" %>
+                    <%= link_to "View Ads", "#", class: "btn btn-outline-info btn-sm flex-fill" %>
                   <% elsif campaign.status == 'active' %>
-                    <%= link_to "View Performance", "#", class: "btn btn-success btn-sm flex-fill" %>
+                    <%= link_to "View Performance", "#", class: "btn btn-outline-success btn-sm flex-fill" %>
                   <% elsif campaign.status == 'completed' %>
-                    <%= link_to "View Results", "#", class: "btn btn-primary btn-sm flex-fill" %>
+                    <%= link_to "View Results", "#", class: "btn btn-outline-primary btn-sm flex-fill" %>
                   <% else %>
-                    <%= link_to "Complete", edit_campaign_path(campaign), class: "btn btn-warning btn-sm flex-fill" %>
+                    <%= link_to "Complete", edit_campaign_path(campaign), class: "btn btn-outline-warning btn-sm flex-fill" %>
                   <% end %>
                 </div>
               </div>
