@@ -80,6 +80,13 @@
                   </p>
                 <% end %>
 
+                <% if campaign.generated_ads.any? %>
+                  <p class="text-muted small mb-2">
+                    <i class="bi bi-magic me-1"></i>
+                    <%= pluralize(campaign.generated_ads.completed.count, 'generated ad') %>
+                  </p>
+                <% end %>
+
                 <!-- Completion Status -->
                 <div class="d-flex align-items-center mb-2">
                   <i class="bi bi-check-circle text-muted me-1"></i>
@@ -100,12 +107,17 @@
                   <% end %>
                   
                   <% if campaign.can_generate_ads? %>
-                    <%= link_to "#", class: "btn btn-outline-primary btn-sm flex-fill" do %>
+                    <%= link_to generate_ads_campaign_path(campaign), 
+                        class: "btn btn-outline-primary btn-sm flex-fill",
+                        data: { 
+                          confirm: "This will start generating AI-powered ads for this campaign. Continue?",
+                          "turbo-method": "post"
+                        } do %>
                       <i class="bi bi-magic me-1"></i>
                       Generate Ads
                     <% end %>
                   <% elsif campaign.status == 'ready' %>
-                    <%= link_to "View Ads", "#", class: "btn btn-outline-info btn-sm flex-fill" %>
+                    <%= link_to "View Ads", campaign_path(campaign), class: "btn btn-outline-info btn-sm flex-fill" %>
                   <% elsif campaign.status == 'active' %>
                     <%= link_to "View Performance", "#", class: "btn btn-outline-success btn-sm flex-fill" %>
                   <% elsif campaign.status == 'completed' %>

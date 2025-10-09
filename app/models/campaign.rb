@@ -3,6 +3,7 @@
 class Campaign < ApplicationRecord
   belongs_to :business
   has_many_attached :inspiration_images
+  has_many :generated_ads, dependent: :destroy
 
   # Validations
   validates :name, presence: true, length: { maximum: 100 }
@@ -53,7 +54,8 @@ class Campaign < ApplicationRecord
   end
 
   def ad_sizes_array
-    ad_sizes || []
+    return [] unless ad_sizes
+    ad_sizes.reject(&:blank?)
   end
 
   def has_inspiration_images?

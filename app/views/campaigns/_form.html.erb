@@ -129,9 +129,12 @@
               <div class="col-md-3">
                 <div class="position-relative">
                   <%= image_tag image, class: "img-thumbnail w-100", style: "height: 120px; object-fit: cover;" %>
-                  <%= link_to campaign_asset_path(@campaign, image), method: :delete, 
+                  <%= link_to campaign_asset_path(@campaign, image), 
                       class: "btn btn-sm btn-danger position-absolute top-0 end-0 m-1",
-                      data: { confirm: "Remove this image?" } do %>
+                      data: { 
+                        confirm: "Remove this image?",
+                        "turbo-method": "delete"
+                      } do %>
                     <i class="bi bi-x"></i>
                   <% end %>
                 </div>

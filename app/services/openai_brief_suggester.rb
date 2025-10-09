@@ -3,11 +3,14 @@
 class OpenaiBriefSuggester
   def initialize(campaign)
     @campaign = campaign
-    @client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
+    @client = OpenAI::Client.new(
+      access_token: Rails.application.credentials.openai_api_key,
+      organization_id: Rails.application.credentials.openai_organization_id
+    )
   end
 
   def call
-    return { error: 'OpenAI API key not configured' } unless ENV['OPENAI_API_KEY'].present?
+    return { error: 'OpenAI API key not configured' } unless Rails.application.credentials.openai_api_key.present?
 
     prompt = build_prompt
     response = @client.chat(

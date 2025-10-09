@@ -3,7 +3,7 @@
 class CampaignsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_business
-  before_action :set_campaign, only: [:show, :edit, :update, :destroy, :generate_suggestions]
+  before_action :set_campaign, only: [:show, :edit, :update, :destroy, :generate_suggestions, :generate_ads, :delete_ads]
 
   def index
     @campaigns = @business.campaigns.by_status_priority
@@ -67,6 +67,50 @@ class CampaignsController < ApplicationController
   def destroy
     @campaign.destroy
     redirect_to campaigns_path, notice: 'Campaign deleted successfully!'
+  end
+
+  def generate_ads
+    if @campaign.nil?
+      render json: { 
+        error: "Campaign not found" 
+      }, status: :not_found
+      return
+    end
+
+    if @campaign.can_generate_ads?
+      # Start the background job for ad generation
+      AdGenerationJob.perform_later(@campaign.id)
+      
+      render json: { 
+        status: "started", 
+        message: "Ad generation has started. You'll see real-time updates below." 
+      }
+    else
+      render json: { 
+        error: "Campaign is not ready for ad generation. Please complete all required fields." 
+      }, status: :unprocessable_entity
+    end
+  end
+
+  def delete_ads
+    if @campaign.nil?
+      redirect_to campaigns_path, alert: "Campaign not found"
+      return
+    end
+
+    begin
+      # Delete all generated ads for this campaign
+      deleted_count = @campaign.generated_ads.count
+      @campaign.generated_ads.destroy_all
+      
+      # Reset campaign status to draft
+      @campaign.update_column(:status, 'draft')
+      
+      redirect_to campaign_path(@campaign), notice: "Successfully deleted #{deleted_count} generated ads. Campaign status reset to draft."
+    rescue => e
+      Rails.logger.error "Error deleting ads: #{e.message}"
+      redirect_to campaign_path(@campaign), alert: "Error deleting ads: #{e.message}"
+    end
   end
 
   def generate_suggestions

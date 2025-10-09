@@ -6,7 +6,8 @@ user = User.find_or_create_by(email: "owner@example.com") do |u|
 end
 
 unless user.business
-  biz = user.create_business!(
+  # Create business with validation context to skip logo requirement
+  biz = user.build_business(
     name: "Sample Coffee Shop",
     type_of_business: "Restaurant",
     description: "A cozy neighborhood coffee shop serving locally roasted beans and fresh pastries.",
@@ -24,11 +25,16 @@ unless user.business
     tone_words: ["cozy", "welcoming", "artisanal", "local"]
   )
   
-  # Attach a sample logo
-  logo_path = Rails.root.join('test', 'fixtures', 'files', 'test_logo.png')
-  if File.exist?(logo_path)
-    biz.logo.attach(io: File.open(logo_path), filename: 'sample_logo.png', content_type: 'image/png')
-  end
+  # Save without validation first
+  biz.save!(validate: false)
+  
+  # Create a simple placeholder logo using a 1x1 transparent PNG
+  placeholder_logo = Base64.decode64("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==")
+  biz.logo.attach(
+    io: StringIO.new(placeholder_logo),
+    filename: 'sample_logo.png',
+    content_type: 'image/png'
+  )
   biz.contact_people.create!(
     first_name: "Alex",
     last_name: "Ng",

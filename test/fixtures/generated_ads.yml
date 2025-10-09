@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  campaign: one
+  variant_id: MyString
+  ad_size: MyString
+  headline: MyText
+  subheadline: MyText
+  call_to_action: MyText
+  image_url: MyText
+  reasoning: MyText
+  status: MyString
+
+two:
+  campaign: two
+  variant_id: MyString
+  ad_size: MyString
+  headline: MyText
+  subheadline: MyText
+  call_to_action: MyText
+  image_url: MyText
+  reasoning: MyText
+  status: MyString

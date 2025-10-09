@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_07_181509) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_08_212033) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -95,6 +95,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_07_181509) do
     t.index ["business_id"], name: "index_contact_people_on_business_id"
   end
 
+  create_table "generated_ads", force: :cascade do |t|
+    t.bigint "campaign_id", null: false
+    t.string "variant_id"
+    t.string "ad_size"
+    t.text "headline"
+    t.text "subheadline"
+    t.text "call_to_action"
+    t.text "image_url"
+    t.text "reasoning"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["campaign_id"], name: "index_generated_ads_on_campaign_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -112,4 +127,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_07_181509) do
   add_foreign_key "businesses", "users"
   add_foreign_key "campaigns", "businesses"
   add_foreign_key "contact_people", "businesses"
+  add_foreign_key "generated_ads", "campaigns"
 end

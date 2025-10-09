@@ -21,9 +21,14 @@ Rails.application.routes.draw do
   resources :campaigns do
     member do
       post :generate_suggestions  # AI brief suggestions
+      post :generate_ads          # AI ad generation
+      delete :delete_ads          # Delete all generated ads
     end
     resources :assets, only: [:create, :destroy]  # inspiration image management
   end
+
+  # ActionCable
+  mount ActionCable.server => '/cable'
 
   # Defines the root path route ("/")
   root "home#index"

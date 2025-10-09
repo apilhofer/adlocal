@@ -10,12 +10,15 @@ AdLocal is a Rails 8 application for small businesses to create AI-powered adver
 - **Business**: Company profiles with brand information (logo, colors, fonts, tone)
 - **Campaign**: Advertising campaigns with AI-generated content
 - **ContactPerson**: Business contact information
+- **GeneratedAd**: AI-generated ad variants with images and copy
 
 ### Key Features Implemented
 - User authentication (Devise)
 - Business profile management with brand assets
 - Campaign creation and management
-- AI-powered ad generation (OpenAI integration)
+- AI-powered ad generation with real-time streaming (OpenAI integration)
+- Multi-variant, multi-size ad generation
+- Real-time progress updates via ActionCable
 - File uploads (Active Storage)
 - Responsive Bootstrap UI with Flowbite components
 
@@ -23,6 +26,7 @@ AdLocal is a Rails 8 application for small businesses to create AI-powered adver
 - Users table (Devise)
 - Businesses table with brand profile fields
 - Campaigns table with AI-generated content
+- Generated ads table for storing AI-generated variants
 - Contact people table
 - Active Storage attachments for logos and inspiration images
 
@@ -36,6 +40,24 @@ AdLocal is a Rails 8 application for small businesses to create AI-powered adver
 - ✅ Campaign completion percentage calculation
 - ✅ Logo upload requirements for business profiles
 - ✅ Standardized element (buttons, menus, dropdowns, input boxes, labels, etc) styling across application
+- ✅ Implemented Epic D - AI Ad Generation with real-time streaming
+- ✅ Created comprehensive OpenAI prompt template for ad generation
+- ✅ Set up ActionCable for real-time updates
+- ✅ Built multi-variant, multi-size ad generation system
+- ✅ Added GeneratedAd model for storing generated content
+- ✅ Wired up Generate Ads buttons across all campaign views
+- ✅ Fixed Rails 8 compatibility issues with deprecated method: syntax
+- ✅ Fixed generate_ads action missing from set_campaign before_action
+- ✅ Fixed ActionCable import issues in Stimulus controller
+- ✅ Created ApplicationCable base classes for ActionCable
+- ✅ Temporarily disabled ActionCable to fix immediate functionality
+- ✅ Updated ad generation to create only 1 variant instead of 3
+- ✅ Changed ad labels to display ad size instead of "Variant X"
+- ✅ Re-enabled ActionCable with proper Rails 8 configuration
+- ✅ Implemented real-time streaming of generation progress via ActionCable
+- ✅ Added proper Devise authentication for ActionCable connections
+- ✅ Connected to real OpenAI API for actual ad generation
+- ✅ Added OpenAI organization ID for enterprise account support
 
 ## Current State
 - All tests passing
@@ -166,5 +188,20 @@ This file should be updated after each significant change to maintain context ac
 - Testing updates
 - Next priorities
 
+## Recent Fixes
+- `Fixed OpenAI image generation 400 errors by removing unsupported quality parameter`
+- `Identified root cause: quality: "standard" parameter not supported by DALL-E API`
+- `Image generation now works correctly with real OpenAI API calls`
+- `Updated image generation to create complete ads with text overlay instead of just background images`
+- `Added build_complete_ad_prompt method to include headline, subheadline, call-to-action, and business name in generated images`
+- `Added delete_ads functionality to remove all generated ads and reset campaign to draft status`
+- `Removed placeholder image fallback - ad generation now fails completely if OpenAI API fails`
+- `Fixed 400 errors by simplifying image generation prompt to avoid content policy violations`
+- `Fixed ActionCable real-time updates by broadcasting saved GeneratedAd records instead of raw variants`
+- `Added extensive debugging to ActionCable JavaScript controller to troubleshoot connection issues`
+- `Fixed ActionCable import issue in Rails 8 by using ES6 import instead of window.ActionCable`
+- `✅ RESOLVED: ActionCable real-time updates now working with Rails 8 + Importmap`
+- `Optimized CSS preloading warning by adding media="all" attribute to stylesheet_link_tag`
+
 ---
-*Last updated: [Current Date] - Added homepage images to story cards*
+*Last updated: [Current Date] - Fixed OpenAI image generation API errors*
