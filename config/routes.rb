@@ -23,8 +23,24 @@ Rails.application.routes.draw do
       post :generate_suggestions  # AI brief suggestions
       post :generate_ads          # AI ad generation
       delete :delete_ads          # Delete all generated ads
+      patch :update_all_ad_positions  # Update positions for all ads
+      post :render_all_ads        # Render all ads as final images
+      post :unlock_all_ads       # Unlock all ads for editing
+      post :regenerate_background # Regenerate background image
+      post :proceed_to_editing   # Proceed to inline editing
+      get :background_variants, defaults: { format: :json }  # Get background variants as JSON
     end
     resources :assets, only: [:create, :destroy]  # inspiration image management
+  end
+
+  # Ad Compositor routes
+  resources :generated_ads, only: [] do
+    member do
+      get :compose
+      patch :update_positions
+      post :render_final
+      post :unlock
+    end
   end
 
   # ActionCable

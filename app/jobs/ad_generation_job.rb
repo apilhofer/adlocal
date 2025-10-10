@@ -3,6 +3,7 @@ class AdGenerationJob < ApplicationJob
 
   def perform(campaign_id)
     campaign = Campaign.find(campaign_id)
+    download_service = ImageDownloadService.new
     
     begin
       # Broadcast start message
@@ -11,42 +12,87 @@ class AdGenerationJob < ApplicationJob
       # Initialize generator
       generator = OpenaiAdGenerator.new(campaign)
       
-      # Generate text content
-      broadcast_progress(campaign, "Generating ad copy and concepts...", 25)
+      # Step 1: Generate ad copy variants (headline, subheadline, CTA) - ONCE
+      broadcast_progress(campaign, "Generating ad copy...", 10)
       text_response = generator.send(:generate_text_content)
-      
-      # Parse variants
-      broadcast_progress(campaign, "Processing ad variants...", 40)
       variants = generator.send(:parse_text_response, text_response)
       
-      # Generate images for each variant
-      total_variants = variants.length
-      variants.each_with_index do |variant, index|
-        progress = 40 + (50 * (index + 1) / total_variants.to_f)
-        broadcast_progress(campaign, "Generating image for #{variant[:variant_id]}...", progress.to_i)
+      # Step 2: Generate background images - THREE VARIANTS
+      broadcast_progress(campaign, "Generating background images...", 30)
+      background_variants = generator.generate_background_image
+      
+      # Save background variants to database with downloaded images
+      background_variants.each do |variant|
+        # Download and store the image locally
+        blob = download_service.download_and_create_blob(
+          variant[:url], 
+          filename: "#{variant[:aspect]}_background_#{Time.current.to_i}"
+        )
         
-        begin
-          image_url = generator.send(:generate_image, variant[:image_prompt], variant[:ad_size], variant)
-          variant[:image_url] = image_url
-          variant[:status] = "completed"
-
-          # Broadcast individual variant completion
-          broadcast_variant_update(campaign, variant)
-        rescue => e
-          Rails.logger.error "Image generation failed for variant #{variant[:variant_id]}: #{e.message}"
+        if blob
+          # Find existing variant by aspect or create new one
+          background_variant = campaign.background_variants.find_or_initialize_by(aspect: variant[:aspect])
           
-          # Broadcast error and fail the entire job
-          broadcast_error(campaign, "Image generation failed: #{e.message}")
-          raise e
+          # Purge old image if it exists
+          background_variant.image.purge if background_variant.image.attached?
+          
+          # Update attributes and attach new image
+          background_variant.size = variant[:size]
+          background_variant.save!
+          background_variant.image.attach(blob)
+          
+          Rails.logger.info "Updated background variant for #{variant[:aspect]}"
+        else
+          Rails.logger.error "Failed to download background image for #{variant[:aspect]}"
         end
       end
       
-      # Final completion
-      broadcast_progress(campaign, "Ad generation completed!", 100)
-      broadcast_completion(campaign, variants)
+      # Broadcast background images completion
+      broadcast_background_complete(campaign, background_variants)
+      
+      # Step 3: For each selected ad size, create GeneratedAd records with overlayed elements
+      ad_sizes = campaign.ad_sizes_array
+      total_sizes = ad_sizes.length
+      
+      ad_sizes.each_with_index do |ad_size, index|
+        progress = 40 + (30 * (index + 1) / total_sizes.to_f)
+        broadcast_progress(campaign, "Creating ad for #{ad_size}...", progress.to_i)
+        
+        # Choose the appropriate background variant based on ad size
+        background_variant = choose_background_variant_from_db(campaign, ad_size)
+        
+        # Use the first variant for all ad sizes (can be enhanced later)
+        variant = variants.first
+        
+        # Create GeneratedAd record with default positions
+        generated_ad = campaign.generated_ads.create!(
+          variant_id: variant[:variant_id] || variant["variant_id"],
+          ad_size: ad_size,
+          headline: variant[:headline] || variant["headline"],
+          subheadline: variant[:subheadline] || variant["subheadline"],
+          call_to_action: variant[:call_to_action] || variant["call_to_action"],
+          element_positions: GeneratedAd.new.default_positions_for_size(ad_size),
+          status: 'completed',
+          is_locked: false,
+          final_image_url: nil
+        )
+        
+        # Attach the background image from the background variant
+        if background_variant&.image&.attached?
+          generated_ad.background_image.attach(background_variant.image.blob)
+        end
+        
+        Rails.logger.info "Created GeneratedAd #{generated_ad.id} for size #{ad_size}"
+      end
+      
+      # Step 4: Broadcast completion (no final images yet - user will position and render)
+      broadcast_completion(campaign, "Background and text generated! Ready to position and render ads.")
       
     rescue => e
-      broadcast_error(campaign, e.message)
+      Rails.logger.error "Ad generation failed for campaign #{campaign_id}: #{e.message}"
+      Rails.logger.error "Full error details: #{e.inspect}"
+      broadcast_error(campaign, "Ad generation failed: #{e.message}")
+      raise e
     end
   end
   
@@ -75,29 +121,44 @@ class AdGenerationJob < ApplicationJob
     )
   end
   
-  def broadcast_completion(campaign, variants)
-    # Save all variants to database
-    variants.each do |variant|
-      begin
-        Rails.logger.info "Saving variant: #{variant.inspect}"
-        campaign.generated_ads.create!(
-          variant_id: variant[:variant_id] || variant["variant_id"],
-          ad_size: variant[:ad_size] || variant["ad_size"],
-          headline: variant[:headline] || variant["headline"],
-          subheadline: variant[:subheadline] || variant["subheadline"],
-          call_to_action: variant[:call_to_action] || variant["call_to_action"],
-          image_url: variant[:image_url] || variant["image_url"],
-          reasoning: variant[:reasoning] || variant["reasoning"],
-          status: variant[:status] || variant["status"] || "completed"
-        )
-        Rails.logger.info "Successfully saved variant"
-      rescue => e
-        Rails.logger.error "Failed to save variant: #{e.message}"
-        Rails.logger.error "Variant data: #{variant.inspect}"
-        raise e
-      end
+  def broadcast_background_complete(campaign, background_variants)
+    ActionCable.server.broadcast(
+      "ad_generation_#{campaign.id}",
+      {
+        type: "background_complete",
+        background_variants: background_variants,
+        timestamp: Time.current
+      }
+    )
+  end
+
+  def choose_background_variant_from_db(campaign, ad_size)
+    # Map ad sizes to appropriate background variants from database
+    case ad_size
+    when "728x90", "320x50", "970x250"  # Wide formats
+      campaign.background_variants.find_by(aspect: "leaderboard") || campaign.background_variants.first
+    when "160x600", "300x600"  # Tall formats
+      campaign.background_variants.find_by(aspect: "skyscraper") || campaign.background_variants.first
+    when "300x250", "336x280", "1080x1080"  # Square formats
+      campaign.background_variants.find_by(aspect: "square") || campaign.background_variants.first
+    else  # Fallback to square
+      campaign.background_variants.find_by(aspect: "square") || campaign.background_variants.first
     end
-    
+  end
+
+  def choose_background_variant(background_variants, ad_size)
+    # Map ad sizes to appropriate background variants
+    case ad_size
+    when "728x90", "320x50"  # Wide formats
+      background_variants.find { |v| v[:aspect] == "leaderboard" } || background_variants.first
+    when "160x600", "300x600"  # Tall formats
+      background_variants.find { |v| v[:aspect] == "skyscraper" } || background_variants.first
+    else  # Square formats (300x250, etc.)
+      background_variants.find { |v| v[:aspect] == "square" } || background_variants.first
+    end
+  end
+
+  def broadcast_completion(campaign, message)
     # Update campaign status to ready
     campaign.update!(status: 'ready')
     
@@ -108,16 +169,17 @@ class AdGenerationJob < ApplicationJob
       "ad_generation_#{campaign.id}",
       {
         type: "completion",
+        message: message,
         variants: saved_ads.map do |ad|
           {
             variant_id: ad.variant_id,
             headline: ad.headline,
             subheadline: ad.subheadline,
             call_to_action: ad.call_to_action,
-            image_url: ad.image_url,
+            background_image_url: ad.background_image_url,
             ad_size: ad.ad_size,
-            reasoning: ad.reasoning,
-            status: ad.status
+            status: ad.status,
+            is_locked: ad.is_locked
           }
         end,
         timestamp: Time.current

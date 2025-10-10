@@ -202,6 +202,19 @@ This file should be updated after each significant change to maintain context ac
 - `Fixed ActionCable import issue in Rails 8 by using ES6 import instead of window.ActionCable`
 - `✅ RESOLVED: ActionCable real-time updates now working with Rails 8 + Importmap`
 - `Optimized CSS preloading warning by adding media="all" attribute to stylesheet_link_tag`
+- `Restructured campaign show page with Bootstrap tabs: Campaign Brief, Generate Ads, Choose Inventory`
+- `Updated all tabs to use full-width layout (col-12) for consistent design`
+- `Moved Campaign Completion Status card to header section above tabs for better visibility`
+- `Updated campaign completion percentage to include ad generation as a required field`
+- `Added granular campaign status messages: "Ready to generate ads", "Ready to pick inventory", etc.`
+- `Simplified campaign show view to 4 tabs: Campaign Brief, Generate Background Image, Create Ads, Choose Inventory`
+- `Tab 2 (Generate Background Image): Only shows generate/regenerate button and background image display`
+- `Tab 3 (Create Ads): Contains all ad creation and editing functionality with drag-and-drop interface`
+- `Tab 4 (Choose Inventory): Placeholder for inventory selection functionality`
+- `Button automatically changes from "Generate Image" to "Regenerate Image" after generation`
+- `Removed complex workflow from Tab 2 - now focused solely on background image generation`
+- `Added comprehensive debugging to OpenAI image generation to log exact prompts and parameters`
+- `Implemented balanced prompt with layout instructions for different ad sizes while avoiding content policy issues`
 
 ---
-*Last updated: [Current Date] - Fixed OpenAI image generation API errors*
+*Last updated: [Current Date] - Simplified campaign workflow to 4 focused tabs with streamlined background image generation*

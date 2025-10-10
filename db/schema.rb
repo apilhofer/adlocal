@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_08_212033) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_09_204517) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_08_212033) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "background_variants", force: :cascade do |t|
+    t.bigint "campaign_id", null: false
+    t.string "aspect"
+    t.string "size"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["campaign_id", "aspect"], name: "index_background_variants_on_campaign_id_and_aspect", unique: true
+    t.index ["campaign_id"], name: "index_background_variants_on_campaign_id"
   end
 
   create_table "businesses", force: :cascade do |t|
@@ -107,7 +117,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_08_212033) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "element_positions"
+    t.text "final_image_url"
+    t.boolean "is_locked", default: false
+    t.integer "font_size"
+    t.string "text_color"
     t.index ["campaign_id"], name: "index_generated_ads_on_campaign_id"
+    t.index ["element_positions"], name: "index_generated_ads_on_element_positions", using: :gin
   end
 
   create_table "users", force: :cascade do |t|
@@ -124,6 +140,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_08_212033) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "background_variants", "campaigns"
   add_foreign_key "businesses", "users"
   add_foreign_key "campaigns", "businesses"
   add_foreign_key "contact_people", "businesses"

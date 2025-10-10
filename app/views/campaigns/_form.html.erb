@@ -220,10 +220,22 @@
           <p class="text-muted small mb-2">Describe your brand personality</p>
           <%= f.text_field :tone_words,
               id: "tone_words",
-              class: "form-control",
+              class: "form-control #{'is-invalid' if @campaign.errors[:tone_words].any?}",
               placeholder: "Leave blank to use business default: #{@business.tone_words_array.join(', ')}",
               value: @campaign.persisted? ? @campaign.tone_words_array.join(", ") : "",
-              data: { controller: "tag-input" } %>
+              data: { controller: "tag-input" },
+              oninput: "updateToneWordsCount()" %>
+          <div class="d-flex justify-content-between mt-1">
+            <div class="text-muted small">
+              <span id="tone-words-count">0</span>/100 characters
+            </div>
+            <div class="text-muted small">
+              <span id="tone-words-status"></span>
+            </div>
+          </div>
+          <% if @campaign.errors[:tone_words].any? %>
+            <div class="invalid-feedback"><%= @campaign.errors[:tone_words].first %></div>
+          <% end %>
         </div>
       </div>
     </div>
@@ -239,13 +251,13 @@
     </div>
     <div class="card-body">
       <%# Brief Text Area %>
-      <div class="mb-4">
+      <div class="mb-4" data-controller="character-counter">
         <label for="campaign_brief" class="form-label fw-bold">
         Description<span class="text-danger">*</span>
         </label>
         <p class="text-muted small mb-3">
           Describe your campaign goals, target audience, and key messages. 
-          Minimum 20 characters.
+          Must be between 20 and 200 characters.
         </p>
         <%= f.text_area :brief,
             id: "campaign_brief",
@@ -253,19 +265,13 @@
             rows: 6,
             placeholder: "Describe your campaign goals, target audience, and key messages...",
             required: true,
+            maxlength: 200,
             data: { 
-              controller: "brief-autosave",
-              target: "briefAutosave.textarea"
+              character_counter_target: "textarea"
             } %>
         <div class="d-flex justify-content-between mt-2">
           <div class="text-muted small">
-            <span id="word-count">0</span> words
-          </div>
-          <div class="text-muted small">
-            <span id="char-count">0</span> characters
-          </div>
-          <div class="text-muted small">
-            <span id="save-indicator"></span>
+            <span data-character-counter-target="count">0</span>/200 characters
           </div>
         </div>
         <% if @campaign.errors[:brief].any? %>
@@ -304,7 +310,7 @@
 
       <%# Guided Fields %>
       <div class="row">
-        <div class="col-md-6 mb-3">
+        <div class="col-md-6 mb-3" data-controller="character-counter">
           <label for="campaign_goals" class="form-label fw-bold">
             Goals <span class="text-danger">*</span>
           </label>
@@ -313,12 +319,22 @@
               class: "form-control #{'is-invalid' if @campaign.errors[:goals].any?}",
               rows: 3,
               placeholder: "What do you want to achieve with this campaign?",
-              required: true %>
+              required: true,
+              maxlength: 150,
+              data: { character_counter_target: "textarea" } %>
+          <div class="d-flex justify-content-between mt-1">
+            <div class="text-muted small">
+              <span data-character-counter-target="count">0</span>/150 characters
+            </div>
+            <div class="text-muted small">
+              <span data-character-counter-target="status"></span>
+            </div>
+          </div>
           <% if @campaign.errors[:goals].any? %>
             <div class="invalid-feedback"><%= @campaign.errors[:goals].first %></div>
           <% end %>
         </div>
-        <div class="col-md-6 mb-3">
+        <div class="col-md-6 mb-3" data-controller="character-counter">
           <label for="campaign_audience" class="form-label fw-bold">
             Target Audience <span class="text-danger">*</span>
           </label>
@@ -327,14 +343,24 @@
               class: "form-control #{'is-invalid' if @campaign.errors[:audience].any?}",
               rows: 3,
               placeholder: "Who is your target audience?",
-              required: true %>
+              required: true,
+              maxlength: 150,
+              data: { character_counter_target: "textarea" } %>
+          <div class="d-flex justify-content-between mt-1">
+            <div class="text-muted small">
+              <span data-character-counter-target="count">0</span>/150 characters
+            </div>
+            <div class="text-muted small">
+              <span data-character-counter-target="status"></span>
+            </div>
+          </div>
           <% if @campaign.errors[:audience].any? %>
             <div class="invalid-feedback"><%= @campaign.errors[:audience].first %></div>
           <% end %>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6 mb-3">
+        <div class="col-md-6 mb-3" data-controller="character-counter">
           <label for="campaign_offer" class="form-label fw-bold">
             Offer Details <span class="text-danger">*</span>
           </label>
@@ -343,20 +369,43 @@
               class: "form-control #{'is-invalid' if @campaign.errors[:offer].any?}",
               rows: 3,
               placeholder: "What special offer or promotion are you running?",
-              required: true %>
+              required: true,
+              maxlength: 150,
+              data: { character_counter_target: "textarea" } %>
+          <div class="d-flex justify-content-between mt-1">
+            <div class="text-muted small">
+              <span data-character-counter-target="count">0</span>/150 characters
+            </div>
+            <div class="text-muted small">
+              <span data-character-counter-target="status"></span>
+            </div>
+          </div>
           <% if @campaign.errors[:offer].any? %>
             <div class="invalid-feedback"><%= @campaign.errors[:offer].first %></div>
           <% end %>
         </div>
-        <div class="col-md-6 mb-3">
+        <div class="col-md-6 mb-3" data-controller="character-counter">
           <label for="campaign_cta" class="form-label fw-bold">
             Call to Action 
             <span class="badge bg-light text-muted ms-2">Optional</span>
           </label>
-          <%= f.text_field :cta,
+          <%= f.text_area :cta,
               id: "campaign_cta",
-              class: "form-control",
-              placeholder: "e.g., Shop Now, Learn More, Get Started" %>
+              class: "form-control #{'is-invalid' if @campaign.errors[:cta].any?}",
+              placeholder: "e.g., Shop Now, Learn More, Get Started",
+              maxlength: 100,
+              data: { character_counter_target: "textarea" } %>
+          <div class="d-flex justify-content-between mt-1">
+            <div class="text-muted small">
+              <span data-character-counter-target="count">0</span>/100 characters
+            </div>
+            <div class="text-muted small">
+              <span data-character-counter-target="status"></span>
+            </div>
+          </div>
+          <% if @campaign.errors[:cta].any? %>
+            <div class="invalid-feedback"><%= @campaign.errors[:cta].first %></div>
+          <% end %>
         </div>
       </div>
 
@@ -385,6 +434,13 @@
             <p class="text-muted small mb-0">Standard banner size</p>
           </div>
           <div class="form-check mb-3">
+            <%= check_box_tag "campaign[ad_sizes][]", "336x280", @campaign.persisted? ? @campaign.ad_sizes_array.include?("336x280") : true, { class: "form-check-input", id: "campaign_ad_sizes_336x280" } %>
+            <label class="form-check-label fw-bold" for="campaign_ad_sizes_336x280">
+              336×280 (Large Rectangle)
+            </label>
+            <p class="text-muted small mb-0">Enhanced banner size</p>
+          </div>
+          <div class="form-check mb-3">
             <%= check_box_tag "campaign[ad_sizes][]", "728x90", @campaign.persisted? ? @campaign.ad_sizes_array.include?("728x90") : true, { class: "form-check-input", id: "campaign_ad_sizes_728x90" } %>
             <label class="form-check-label fw-bold" for="campaign_ad_sizes_728x90">
               728×90 (Leaderboard)
@@ -392,14 +448,21 @@
             <p class="text-muted small mb-0">Wide banner for headers</p>
           </div>
           <div class="form-check mb-3">
+            <%= check_box_tag "campaign[ad_sizes][]", "970x250", @campaign.persisted? ? @campaign.ad_sizes_array.include?("970x250") : true, { class: "form-check-input", id: "campaign_ad_sizes_970x250" } %>
+            <label class="form-check-label fw-bold" for="campaign_ad_sizes_970x250">
+              970×250 (Billboard)
+            </label>
+            <p class="text-muted small mb-0">Large format display</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-check mb-3">
             <%= check_box_tag "campaign[ad_sizes][]", "160x600", @campaign.persisted? ? @campaign.ad_sizes_array.include?("160x600") : true, { class: "form-check-input", id: "campaign_ad_sizes_160x600" } %>
             <label class="form-check-label fw-bold" for="campaign_ad_sizes_160x600">
               160×600 (Wide Skyscraper)
             </label>
             <p class="text-muted small mb-0">Sidebar placement</p>
           </div>
-        </div>
-        <div class="col-md-6">
           <div class="form-check mb-3">
             <%= check_box_tag "campaign[ad_sizes][]", "300x600", @campaign.persisted? ? @campaign.ad_sizes_array.include?("300x600") : true, { class: "form-check-input", id: "campaign_ad_sizes_300x600" } %>
             <label class="form-check-label fw-bold" for="campaign_ad_sizes_300x600">
@@ -413,6 +476,13 @@
               320×50 (Mobile Banner)
             </label>
             <p class="text-muted small mb-0">Mobile-optimized</p>
+          </div>
+          <div class="form-check mb-3">
+            <%= check_box_tag "campaign[ad_sizes][]", "1080x1080", @campaign.persisted? ? @campaign.ad_sizes_array.include?("1080x1080") : true, { class: "form-check-input", id: "campaign_ad_sizes_1080x1080" } %>
+            <label class="form-check-label fw-bold" for="campaign_ad_sizes_1080x1080">
+              1080×1080 (Square / Social)
+            </label>
+            <p class="text-muted small mb-0">Perfect for social media</p>
           </div>
         </div>
       </div>
@@ -433,3 +503,45 @@
     <% end %>
   </div>
 <% end %>
+
+<script>
+function updateToneWordsCount() {
+  const input = document.getElementById('tone_words');
+  const countSpan = document.getElementById('tone-words-count');
+  const statusSpan = document.getElementById('tone-words-status');
+  
+  if (input && countSpan) {
+    const count = input.value.length;
+    const maxLength = 100;
+    const remaining = maxLength - count;
+    
+    countSpan.textContent = count;
+    
+    if (remaining < 0) {
+      statusSpan.textContent = `${Math.abs(remaining)} over limit`;
+      statusSpan.className = 'text-muted small text-danger';
+      input.classList.add('is-invalid');
+      input.classList.remove('is-valid');
+    } else if (remaining <= 10) {
+      statusSpan.textContent = `${remaining} remaining`;
+      statusSpan.className = 'text-muted small text-warning';
+      input.classList.remove('is-invalid');
+      input.classList.add('is-valid');
+    } else {
+      statusSpan.textContent = '';
+      statusSpan.className = 'text-muted small';
+      if (count > 0) {
+        input.classList.add('is-valid');
+        input.classList.remove('is-invalid');
+      } else {
+        input.classList.remove('is-valid', 'is-invalid');
+      }
+    }
+  }
+}
+
+// Initialize tone words count on page load
+document.addEventListener('DOMContentLoaded', function() {
+  updateToneWordsCount();
+});
+</script>

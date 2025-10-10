@@ -26,8 +26,14 @@ gem 'devise'
 # Image processing for Active Storage variants
 gem 'image_processing', '~> 1.2'
 
+# Image manipulation for ad compositor
+gem 'mini_magick', '~> 4.12'
+
 # OpenAI API integration
 gem 'ruby-openai'
+
+# HTTP client for downloading images
+gem 'httparty'
 
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]

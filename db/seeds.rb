@@ -51,7 +51,7 @@ if business.campaigns.empty?
   draft_campaign = business.campaigns.create!(
     name: "Summer Coffee Specials",
     status: "draft",
-    brief: "Promote our new summer iced coffee drinks and cold brew selection. Target coffee lovers looking for refreshing options during hot weather. Emphasize locally sourced ingredients and artisanal preparation methods.",
+    brief: "Promote our new summer iced coffee drinks and cold brew selection. Target coffee lovers looking for refreshing options during hot weather.",
     goals: "Increase summer beverage sales by 30% and attract new customers during the hot season",
     audience: "Coffee enthusiasts aged 25-45 who appreciate quality and local sourcing",
     offer: "20% off all iced coffee drinks and free cold brew samples",
@@ -66,7 +66,7 @@ if business.campaigns.empty?
   active_campaign = business.campaigns.create!(
     name: "Grand Opening Celebration",
     status: "active",
-    brief: "Announce our grand opening with special promotions and community events. Create excitement around our new location and build relationships with local residents. Focus on community engagement and establishing ourselves as the neighborhood coffee destination.",
+    brief: "Announce our grand opening with special promotions and community events. Create excitement around our new location and build relationships with local residents.",
     goals: "Generate buzz for grand opening, attract 200+ visitors on opening day, establish community presence",
     audience: "Local residents, coffee lovers, families, remote workers, and community members",
     offer: "Free coffee for first 100 customers, 50% off all drinks for opening week, free pastries with purchase",

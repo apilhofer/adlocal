@@ -157,6 +157,70 @@ class UserTest < ActiveSupport::TestCase
 end
 ```
 
+## AI Integration Guidelines
+
+### OpenAI API Compliance
+- **Prompt Length Limit**: All OpenAI prompts MUST be under 1000 characters
+- **Validation Required**: Implement character count validation for all prompt generation
+- **Error Handling**: Handle OpenAI API errors gracefully with detailed logging
+- **Content Policy**: Ensure prompts comply with OpenAI content policy
+- **Rate Limiting**: Implement proper rate limiting and retry logic
+
+### Prompt Generation Rules
+- Use `OpenaiAdGenerator#validate_prompt_length(prompt)` before API calls
+- Truncate long content intelligently (preserve meaning, add "...")
+- Test prompt length in development before deployment
+- Log prompt length in development for debugging
+- Never exceed 1000 characters under any circumstances
+- Provide helpful suggestions when validation fails (which fields to shorten)
+
+### Example Implementation
+```ruby
+def generate_prompt(content)
+  prompt = build_prompt(content)
+  
+  # Validate length before API call
+  if prompt.length > 1000
+    Rails.logger.warn "Prompt too long (#{prompt.length} chars), truncating..."
+    prompt = truncate_prompt_intelligently(prompt)
+  end
+  
+  prompt
+end
+
+private
+
+def validate_prompt_length(prompt)
+  if prompt.length > 1000
+    suggestions = build_shortening_suggestions
+    error_message = "Prompt exceeds 1000 character limit (#{prompt.length} characters). #{suggestions}"
+    raise ArgumentError, error_message
+  end
+  true
+end
+
+def build_shortening_suggestions
+  suggestions = []
+  
+  # Check campaign fields and suggest shortening if too long
+  if @campaign.brief.length > 200
+    suggestions << "Consider shortening the campaign brief (currently #{@campaign.brief.length} characters)"
+  end
+  
+  if @campaign.goals.length > 150
+    suggestions << "Consider shortening the campaign goals (currently #{@campaign.goals.length} characters)"
+  end
+  
+  # ... more field checks
+  
+  if suggestions.any?
+    "To fix this, please: " + suggestions.join(", ") + "."
+  else
+    "Please review and shorten the campaign content to reduce the overall prompt length."
+  end
+end
+```
+
 ## Security Guidelines
 
 ### General Security

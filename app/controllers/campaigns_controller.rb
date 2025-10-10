@@ -3,7 +3,7 @@
 class CampaignsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_business
-  before_action :set_campaign, only: [:show, :edit, :update, :destroy, :generate_suggestions, :generate_ads, :delete_ads]
+  before_action :set_campaign, only: [:show, :edit, :update, :destroy, :generate_suggestions, :generate_ads, :delete_ads, :update_all_ad_positions, :render_all_ads, :unlock_all_ads, :regenerate_background, :background_variants, :proceed_to_editing]
 
   def index
     @campaigns = @business.campaigns.by_status_priority
@@ -110,6 +110,109 @@ class CampaignsController < ApplicationController
     rescue => e
       Rails.logger.error "Error deleting ads: #{e.message}"
       redirect_to campaign_path(@campaign), alert: "Error deleting ads: #{e.message}"
+    end
+  end
+
+  def update_all_ad_positions
+    updates = params[:updates] || []
+    
+    begin
+      updates.each do |update|
+        ad = @campaign.generated_ads.find(update[:ad_id])
+        ad.update!(element_positions: update[:element_positions])
+      end
+      
+      render json: { success: true, message: "All positions updated successfully" }
+    rescue => e
+      render json: { success: false, errors: [e.message] }
+    end
+  end
+
+  def render_all_ads
+    begin
+      @campaign.generated_ads.editable.each do |ad|
+        ImageCompositorService.new(ad).composite
+      end
+      
+      render json: { success: true, message: "All ads rendered successfully" }
+    rescue => e
+      render json: { success: false, errors: [e.message] }
+    end
+  end
+
+  def unlock_all_ads
+    begin
+      @campaign.generated_ads.locked.each do |ad|
+        ad.unlock!
+      end
+      
+      render json: { success: true, message: "All ads unlocked for editing" }
+    rescue => e
+      render json: { success: false, errors: [e.message] }
+    end
+  end
+
+  def regenerate_background
+    # Allow regeneration if campaign is complete (draft or ready status)
+    if @campaign.can_generate_ads? || @campaign.status == 'ready'
+      # Start the background job for background regeneration only
+      RegenerateBackgroundJob.perform_later(@campaign.id)
+      
+      render json: { 
+        status: "started", 
+        message: "Background image regeneration has started." 
+      }
+    else
+      render json: { 
+        error: "Campaign is not ready for background regeneration." 
+      }, status: :unprocessable_entity
+    end
+  end
+
+  def background_variants
+    variants = @campaign.background_variants.map do |variant|
+      {
+        aspect: variant.aspect,
+        size: variant.size,
+        image_url: variant.image_url_full || variant.image_url
+      }
+    end
+    render json: variants
+  end
+
+  def proceed_to_editing
+    begin
+      # This action triggers the creation of GeneratedAd records with overlayed elements
+      # The background image should already exist from the previous step
+      if @campaign.has_background_image?
+        # Create GeneratedAd records for each ad size with overlayed elements
+        generator = OpenaiAdGenerator.new(@campaign)
+        text_response = generator.send(:generate_text_content)
+        variants = generator.send(:parse_text_response, text_response)
+        
+        @campaign.ad_sizes_array.each do |ad_size|
+          variant = variants.first
+          
+          @campaign.generated_ads.create!(
+            variant_id: variant[:variant_id] || variant["variant_id"],
+            ad_size: ad_size,
+            headline: variant[:headline] || variant["headline"],
+            subheadline: variant[:subheadline] || variant["subheadline"],
+            call_to_action: variant[:call_to_action] || variant["call_to_action"],
+            background_image_url: @campaign.generated_ads.first&.background_image_url,
+            element_positions: GeneratedAd.new.default_positions_for_size(ad_size),
+            status: 'completed',
+            is_locked: false,
+            final_image_url: nil
+          )
+        end
+        
+        render json: { success: true, message: "Ready for editing" }
+      else
+        render json: { error: "No background image available" }, status: :unprocessable_entity
+      end
+    rescue => e
+      render json: { success: false, error: e.message }
     end
   end
 

@@ -1,0 +1,234 @@
+<%# Ad Compositor Interface %>
+<div class="container-fluid py-4">
+  <div class="row">
+    <%# Header %>
+    <div class="col-12 mb-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="h3 mb-1">Ad Compositor</h1>
+          <p class="text-muted mb-0">
+            <%= @generated_ad.campaign.name %> - <%= @generated_ad.ad_size %>
+          </p>
+        </div>
+        <div class="d-flex gap-2">
+          <%= link_to "Back to Campaign", campaign_path(@generated_ad.campaign), 
+              class: "btn btn-outline-secondary" %>
+          <% if @generated_ad.editable? %>
+            <%= link_to "Render Final Ad", render_final_generated_ad_path(@generated_ad), 
+                class: "btn btn-primary",
+                data: { 
+                  confirm: "Are you sure? This will create the final ad image and lock it for editing.",
+                  "turbo-method": "post"
+                } %>
+          <% else %>
+            <%= link_to "Edit Positions", unlock_generated_ad_path(@generated_ad), 
+                class: "btn btn-warning",
+                data: { 
+                  confirm: "Are you sure? This will unlock the ad for editing.",
+                  "turbo-method": "post"
+                } %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <%# Main Content %>
+    <div class="col-lg-8">
+      <%# Canvas Preview %>
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom">
+          <h5 class="mb-0 fw-bold text-dark">
+            <i class="bi bi-image text-primary me-2"></i>
+            Ad Preview
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          <div 
+            data-controller="ad-compositor" 
+            data-ad-compositor-generated-ad-id-value="<%= @generated_ad.id %>"
+            data-ad-compositor-ad-size-value="<%= @generated_ad.ad_size %>"
+            data-ad-compositor-background-url-value="<%= @generated_ad.background_image_url %>"
+            data-ad-compositor-element-positions-value="<%= @element_positions.to_json %>"
+            class="ad-canvas-container"
+            style="position: relative; background: #f8f9fa; min-height: 400px; display: flex; justify-content: center; align-items: center;"
+          >
+            <%# Canvas will be rendered by JavaScript %>
+            <div data-ad-compositor-target="canvas" class="ad-canvas" style="position: relative; border: 2px dashed #dee2e6;">
+              <!-- Canvas content will be populated by JavaScript -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# Controls Panel %>
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom">
+          <h5 class="mb-0 fw-bold text-dark">
+            <i class="bi bi-sliders text-primary me-2"></i>
+            Controls
+          </h5>
+        </div>
+        <div class="card-body">
+          <%# Element Selection %>
+          <div class="mb-4">
+            <label class="form-label fw-bold">Select Element</label>
+            <select data-ad-compositor-target="elementSelector" class="form-select">
+              <option value="logo">Logo</option>
+              <option value="headline">Headline</option>
+              <option value="subheadline">Subheadline</option>
+              <option value="cta">Call to Action</option>
+            </select>
+          </div>
+
+          <%# Font Size Controls %>
+          <div class="mb-4">
+            <label class="form-label fw-bold">Font Size</label>
+            <div class="d-flex align-items-center">
+              <input 
+                type="range" 
+                data-ad-compositor-target="fontSizeSlider"
+                class="form-range me-3" 
+                min="8" 
+                max="48" 
+                value="16"
+              >
+              <span data-ad-compositor-target="fontSizeValue" class="badge bg-primary">16px</span>
+            </div>
+          </div>
+
+          <%# Text Color Controls %>
+          <div class="mb-4">
+            <label class="form-label fw-bold">Text Color</label>
+            <div class="d-flex align-items-center">
+              <input 
+                type="color" 
+                data-ad-compositor-target="textColorPicker"
+                class="form-control form-control-color me-3" 
+                value="#000000"
+              >
+              <span data-ad-compositor-target="textColorValue" class="badge bg-dark">#000000</span>
+            </div>
+          </div>
+
+          <%# CTA Background Color (only for CTA) %>
+          <div class="mb-4" data-ad-compositor-target="ctaBgColorControl" style="display: none;">
+            <label class="form-label fw-bold">Button Background</label>
+            <div class="d-flex align-items-center">
+              <input 
+                type="color" 
+                data-ad-compositor-target="ctaBgColorPicker"
+                class="form-control form-control-color me-3" 
+                value="#ff0000"
+              >
+              <span data-ad-compositor-target="ctaBgColorValue" class="badge bg-danger">#ff0000</span>
+            </div>
+          </div>
+
+          <%# Alignment Controls %>
+          <div class="mb-4">
+            <label class="form-label fw-bold">Text Alignment</label>
+            <div class="btn-group w-100" role="group">
+              <input type="radio" class="btn-check" name="alignment" id="align-left" value="left">
+              <label class="btn btn-outline-primary" for="align-left">
+                <i class="bi bi-text-left"></i>
+              </label>
+              
+              <input type="radio" class="btn-check" name="alignment" id="align-center" value="center" checked>
+              <label class="btn btn-outline-primary" for="align-center">
+                <i class="bi bi-text-center"></i>
+              </label>
+              
+              <input type="radio" class="btn-check" name="align-right" id="align-right" value="right">
+              <label class="btn btn-outline-primary" for="align-right">
+                <i class="bi bi-text-right"></i>
+              </label>
+            </div>
+          </div>
+
+          <%# Position Controls %>
+          <div class="mb-4">
+            <label class="form-label fw-bold">Position</label>
+            <div class="row g-2">
+              <div class="col-6">
+                <label class="form-label small">X Position</label>
+                <input 
+                  type="number" 
+                  data-ad-compositor-target="positionX"
+                  class="form-control form-control-sm" 
+                  placeholder="X"
+                >
+              </div>
+              <div class="col-6">
+                <label class="form-label small">Y Position</label>
+                <input 
+                  type="number" 
+                  data-ad-compositor-target="positionY"
+                  class="form-control form-control-sm" 
+                  placeholder="Y"
+                >
+              </div>
+            </div>
+          </div>
+
+          <%# Action Buttons %>
+          <div class="d-grid gap-2">
+            <button 
+              data-ad-compositor-target="savePositionsBtn"
+              data-action="click->ad-compositor#savePositions"
+              class="btn btn-outline-primary"
+            >
+              <i class="bi bi-save me-2"></i>
+              Save Positions
+            </button>
+            
+            <button 
+              data-ad-compositor-target="resetPositionsBtn"
+              data-action="click->ad-compositor#resetPositions"
+              class="btn btn-outline-secondary"
+            >
+              <i class="bi bi-arrow-clockwise me-2"></i>
+              Reset to Defaults
+            </button>
+          </div>
+
+          <%# Status Messages %>
+          <div data-ad-compositor-target="statusMessages" class="mt-3">
+            <!-- Status messages will be displayed here -->
+          </div>
+        </div>
+      </div>
+
+      <%# Instructions %>
+      <div class="card border-0 shadow-sm mt-3">
+        <div class="card-header bg-white border-bottom">
+          <h6 class="mb-0 fw-bold text-dark">
+            <i class="bi bi-info-circle text-primary me-2"></i>
+            Instructions
+          </h6>
+        </div>
+        <div class="card-body">
+          <ul class="list-unstyled small mb-0">
+            <li class="mb-2">
+              <i class="bi bi-arrow-right text-primary me-2"></i>
+              Select an element to edit its properties
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-arrow-right text-primary me-2"></i>
+              Drag elements to reposition them
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-arrow-right text-primary me-2"></i>
+              Use controls to adjust font size and colors
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-arrow-right text-primary me-2"></i>
+              Save positions before rendering final ad
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
