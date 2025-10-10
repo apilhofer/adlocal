@@ -27,7 +27,7 @@ gem 'devise'
 gem 'image_processing', '~> 1.2'
 
 # Image manipulation for ad compositor
-gem 'mini_magick', '~> 4.12'
+gem 'mini_magick', '~> 5.3'
 
 # OpenAI API integration
 gem 'ruby-openai'
