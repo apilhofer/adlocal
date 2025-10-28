@@ -39,7 +39,8 @@ class ContactPeopleController < ApplicationController
 
   private
   def set_business
-    @business = current_user.business or redirect_to(new_business_path)
+    @business = current_user.business
+    return redirect_to(new_business_path) unless @business
   end
 
   def set_contact
